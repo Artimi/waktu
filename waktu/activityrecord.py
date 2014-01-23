@@ -13,27 +13,27 @@ class ActivityRecord:
 		self.activity = _activity
 		self.startTime = _startTime
 		self.endTime = _endTime
-		
+
 	def setActivity(self, _activity):
 		self.activity = _activity
-		
+
 	def getActivity(self):
 		return self.activity
-		
+
 	def setCategory(self, _category):
 		self.category = _category
-		
+
 	def getCategory(self):
 		return self.category
-		
+
 	def setStartTime(self, _startTime):
 		self.startTime = _startTime
-		
+
 	def getStartTime(self):
 		return self.startTime
-		
+
 	def setEndTime(self, _endTime):
 		self.endTime = _endTime
-	
+
 	def getEndTime(self):
 		return self.endTime

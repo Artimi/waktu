@@ -19,7 +19,7 @@ class TodoList:
         for key, value in _plan.iteritems():
             if not value == None:
                 self.plans[key] = value
-                
+
     def removePlan(self, _plan):
         """Remove plan from this day"""
         if _plan in self.plans:
@@ -28,13 +28,13 @@ class TodoList:
         else:
             return False
 
-    
+
 class TodoListContainer:
     """Container of todolists"""
     def __init__(self):
         self.todolists = {}
         self.todolistFile = ".todolist.tree"
-        
+
     def fillTodolist(self):
         t = {date(2012,12,5) : {"A" : time(1), "B" : time(4)}}
         self.addTodolist(t)
@@ -52,13 +52,13 @@ class TodoListContainer:
 
     def getTodolists(self):
         return self.todolists
-                
+
     def removeTodolist(self, _date):
         """Remove todolist from given day. It's like 'clear all day todolists'"""
         if _date in self.todolists:
             del self.todolists[_date]
         self.storeCategories()
-            
+
     def findTodolist(self, _date):
         """Return todolist to requested day or None if not found"""
         if _date in self.todolists:
@@ -71,7 +71,7 @@ class TodoListContainer:
             f = open(self.todolistFile)
             self.todolists = pickle.load(f)
             f.close()
-            
+
     def storeTodolist(self):
         """Store todolist into file to make them persistent"""
         f = open(self.todolistFile, "w+")
