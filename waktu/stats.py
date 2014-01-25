@@ -21,7 +21,7 @@ class Stats:
     def getLastOccurrence(self, activityName):
         """Return the last occurrence of an activityRecord by given name"""
         for ar in reversed(self.activityRecords):
-            if ar.getActivity().name == activityName:
+            if ar.activity.name == activityName:
                 return ar
         return None
 
@@ -48,12 +48,12 @@ class Stats:
         pie_summary['categories'] = []
         pie_summary['values'] = []
         for ar in self.activityRecords:
-            if ar.getCategory() not in pie_summary['categories']:
-                pie_summary['categories'].append(unicode(ar.getCategory(), errors='ignore'))
-                pie_summary['values'].append(ar.getEndTime() - ar.getStartTime())
+            if ar.category not in pie_summary['categories']:
+                pie_summary['categories'].append(unicode(ar.category, errors='ignore'))
+                pie_summary['values'].append(ar.endTime - ar.startTime)
             else:
-                index = pie_summary['categories'].index(ar.getCategory())
-                pie_summary['values'][index] += ar.getEndTime() - ar.getStartTime()
+                index = pie_summary['categories'].index(ar.category)
+                pie_summary['values'][index] += ar.endTime - ar.startTime
         return pie_summary
 
     def clearStats(self):

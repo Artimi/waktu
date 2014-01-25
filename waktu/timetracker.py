@@ -63,32 +63,32 @@ class TimeTracker(Thread):
                 Gdk.threads_leave()
                 continue
 
-            if self.lastActivity.getActivity().pid == appPid:
+            if self.lastActivity.activity.pid == appPid:
                 """Still the same activity, just actualize the end time"""
-                self.lastActivity.setEndTime(time())
+                self.lastActivity.endTime = time()
 
             else:
                 """New activity, actualize the lastActivity and append
                 the new activity"""
-                if self.lastActivity.getActivity().pid != 0:
+                if self.lastActivity.activity.pid != 0:
                     tmp = copy.deepcopy(self.lastActivity)
                     self.stat.appendActivityRecord(tmp)
-                    self.activities.addActivity(tmp.getActivity().name)
-                    print "DBG: Zmena aktivity! Ulozena aktivita %s (%s)" % (tmp.getActivity().name, tmp.getCategory())
+                    self.activities.addActivity(tmp.activity.name)
+                    print "DBG: Zmena aktivity! Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category)
 
-                self.lastActivity.getActivity().name = appName
-                self.lastActivity.getActivity().pid = appPid
-                self.lastActivity.setCategory('OTHER')
+                self.lastActivity.activity.name = appName
+                self.lastActivity.activity.pid = appPid
+                self.lastActivity.category = 'OTHER'
                 self.getCorrectCategory()
-                self.lastActivity.setStartTime(time())
-                self.lastActivity.setEndTime(time())
+                self.lastActivity.startTime = time()
+                self.lastActivity.endTime = time()
 
             Gdk.threads_leave()
 
         if self.track.isSet() and not self.mode.isSet():
             tmp = copy.deepcopy(self.lastActivity)
             self.stat.appendActivityRecord(tmp)
-            print "DBG: Ulozena aktivita %s (%s)" % (tmp.getActivity().name, tmp.getCategory())
+            print "DBG: Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category)
 
         """Store all records to file to make them persistent"""
         self.stat.storeRecords()
@@ -101,24 +101,24 @@ class TimeTracker(Thread):
     def getCorrectCategory(self, activity=None):
         """Find out category where the activity belongs to"""
         if activity is None:
-            activity = self.lastActivity.getActivity()
+            activity = self.lastActivity.activity
 
         activityCategories = self.categories.getContainingCategories(activity)
         if len(activityCategories) == 0:
             """The activity isn't in any category"""
-            self.lastActivity.setCategory('OTHER')
+            self.lastActivity.category = 'OTHER'
         elif len(activityCategories) == 1:
             """The activity is in exactly one category"""
-            self.lastActivity.setCategory(activityCategories[0].name)
+            self.lastActivity.category = activityCategories[0].name
         else:
             """The activity is in more than one category.
             The Waktu needs to ask user."""
             lastOccurrence = self.stat.getLastOccurrence(activity.name)
             # 10 minutes is the default time to remember users choice
-            if lastOccurrence is None or (time() - lastOccurrence.getEndTime()) > 600:
+            if lastOccurrence is None or (time() - lastOccurrence.endTime) > 600:
                 self.askUser(activity, activityCategories)
             else:
-                self.lastActivity.setCategory(lastOccurrence.getCategory())
+                self.lastActivity.category = lastOccurrence.category
 
     def askUser(self, activity, categories):
         """Creates a notification and asks a user where the activity belongs to"""
@@ -145,9 +145,9 @@ class TimeTracker(Thread):
         """Process user answer and delegate result"""
         n.close()
 
-        if self.lastActivity.getActivity().name == data.name:
+        if self.lastActivity.activity.name == data.name:
             """The focused app is still the same"""
-            self.lastActivity.setCategory(action)
+            self.lastActivity.category = action
         else:
             """There is another activity, need to find it backwards"""
-            self.stat.getLastOccurrence(data.name).setCategory(action)
+            self.stat.getLastOccurrence(data.name).category = action
