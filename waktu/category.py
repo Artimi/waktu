@@ -2,69 +2,63 @@
 #-*- coding: UTF-8 -*-
 
 from collections import Iterable
-import pickle, os
+import pickle
+import os
+
 
 class Category(object):
     """Category contains activities and tarification"""
 
-    def __init__(self, name="", _activity=set(), tarif=()):
-        self._name = name
-        self._activities = set()
-        self.add_activity(_activity)
-        self._tarif = tarif
+    def __init__(self, name="", activity=set(), tarif=()):
+        self.name = name
+        self.activities = set()
+        self.add_activity(activity)
+        self.tarif = tarif
 
     @property
     def activities(self):
-        return self._activities
+        return self.activities
 
-    def add_activity(self, _activity):
-        if isinstance(_activity, str):
-            self._activities.add(_activity)
-        elif isinstance(_activity, Iterable):
-            self._activities.update(_activity)
+    def add_activity(self, activity):
+        if isinstance(activity, str):
+            self.activities.add(activity)
+        elif isinstance(activity, Iterable):
+            self.activities.update(activity)
 
-    def delete_activity(self, _activity):
-        if isinstance(_activity, str):
-            self._activities.discard(_activity)
-        elif isinstance(_activity, Iterable):
-            self._activities.difference_update(_activity)
+    def delete_activity(self, activity):
+        if isinstance(activity, str):
+            self.activities.discard(activity)
+        elif isinstance(activity, Iterable):
+            self.activities.difference_update(activity)
 
-    def containsActivity(self, _activity):
-        if _activity in self._activities:
+    def containsActivity(self, activity):
+        if activity in self.activities:
             return True
         else:
             return False
 
     @property
     def tarif(self):
-		try:
-			if len(self._tarif) == 0:
-				return None
-			else:
-				return self._tarif
-		except:
-			return None
+        try:
+            if len(self.tarif) == 0:
+                return None
+            else:
+                return self.tarif
+        except:
+            return None
 
     @tarif.setter
     def tarif(self, tarif):
         try:
             if len(tarif) == 2:
-                self._tarif = tarif
+                self.tarif = tarif
         except:
             pass
 
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        self._name = name
-
     def __str__(self):
-        s = "Category: " + self._name + "\n"
-        s += "Activities: " + str(self._activities) + "\n"
-        s += "Tarif: " + str(self._tarif)
+        s = "Category: " + self.name + "\n"
+        s += "Activities: " + str(self.activities) + "\n"
+        s += "Tarif: " + str(self.tarif)
         return s
 
 
@@ -75,52 +69,51 @@ class CategoryContainer:
         self.categoryFile = ".categories.tree"
 
     def fillCategory(self):
-        c = Category("Projekt ABC",["Firefox", "CodeBlocks", "gedit", "Terminal"],(120,"CZK"))
+        c = Category("Projekt ABC", ["Firefox", "CodeBlocks", "gedit", "Terminal"], (120, "CZK"))
         self.addCategory(c)
-        c = Category("Projekt XYZ",["Firefox", "Terminal"],(100,"CZK"))
+        c = Category("Projekt XYZ", ["Firefox", "Terminal"], (100, "CZK"))
         self.addCategory(c)
-        c = Category("Zabava",[])
+        c = Category("Zabava", [])
         self.addCategory(c)
 
     def getCategories(self):
         return self.categories
 
+    def addCategory(self, category):
+        if isinstance(category, Category):
+            self.categories.add(category)
+        elif isinstance(category, Iterable):
+            self.categories.update(category)
+        self.storeCategories()  # make the change persistent
 
-    def addCategory(self, _cat):
-        if isinstance(_cat, Category):
-            self.categories.add(_cat)
-        elif isinstance(_cat, Iterable):
-            self.categories.update(_cat)
-        self.storeCategories() # make the change persistent
+    def deleteCategory(self, category):
+        if isinstance(category, Category):
+            self.categories.discard(category)
+        elif isinstance(category, Iterable):
+            self.categories.difference_update(category)
+        elif isinstance(category, str):
+            self.categories.discard(self.findCategory(category))
+        self.storeCategories()  # make the change persistent
 
-    def deleteCategory(self, _cat):
-        if isinstance(_cat, Category):
-            self.categories.discard(_cat)
-        elif isinstance(_cat, Iterable):
-            self.categories.difference_update(_cat)
-        elif isinstance(_cat, str):
-            self.categories.discard(self.findCategory(_cat))
-        self.storeCategories() # make the change persistent
+    def editCategory(self, oldCategory, newCategory):
+        oldCategory.name = newCategory.name
+        oldCategory.tarif = newCategory.tarif
+        self.storeCategories()  # make the change persistent
 
-    def editCategory(self, _oldCat, _newCat):
-        _oldCat.name = _newCat.name
-        _oldCat.tarif = _newCat.tarif
-        self.storeCategories() # make the change persistent
-
-    def findCategory(self, _catName):
+    def findCategory(self, categoryName):
         for cat in self.categories:
-            if cat.name == _catName:
+            if cat.name == categoryName:
                 return cat
         return None
 
-    def getContainingCategories(self, _activity):
+    def getContainingCategories(self, activity):
         """Return a list of categories where the given activity
         is included"""
-        _result = []
-        for cat in self.categories:
-            if cat.containsActivity(_activity.getName()):
-                _result.append(cat)
-        return _result
+        result = []
+        for category in self.categories:
+            if category.containsActivity(activity.getName()):
+                result.append(category)
+        return result
 
     def restoreCategories(self):
         """Restore stored categories"""
@@ -132,7 +125,7 @@ class CategoryContainer:
     def storeCategories(self):
         """Store categories into file to make them persistent"""
         f = open(self.categoryFile, "w+")
-        pickle.dump(self.categories,f)
+        pickle.dump(self.categories, f)
         f.close()
 
     def clearCategories(self):

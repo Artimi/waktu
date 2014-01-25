@@ -4,11 +4,11 @@
 import pickle
 import os
 
+
 class Configuration:
     def __init__(self):
         self.configuration = {}
         self.confFile = ".configuration"
-
 
     def setDefaults(self):
         """Set the default configuration in case there is
@@ -17,13 +17,13 @@ class Configuration:
         self.setValue("state", 1)
         self.storeConfiguration()
 
-    def getValue(self, _option):
-        """Get the value of the option _option"""
-        return self.configuration[_option]
+    def getValue(self, option):
+        """Get the value of the option"""
+        return self.configuration[option]
 
-    def setValue(self, _option, _value):
-        """Set the option _option to the value _value"""
-        self.configuration[_option] = _value
+    def setValue(self, option, value):
+        """Set the option to the value"""
+        self.configuration[option] = value
         self.storeConfiguration()
 
     def restoreConfiguration(self):
@@ -40,4 +40,3 @@ class Configuration:
         f = open(self.confFile, "w+")
         pickle.dump(self.configuration, f)
         f.close()
-

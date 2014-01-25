@@ -6,8 +6,9 @@ from todolist import TodoListContainer
 from configuration import Configuration
 from activity import Activities
 from stats import Stats
-from collections import Iterable
-import time, os
+import time
+import os
+
 
 class Waktu(object):
     """Main class of Waktu project"""
@@ -58,13 +59,13 @@ class Waktu(object):
         """Store configuration into file to make them persistent"""
         self.getConfiguration().storeConfiguration()
 
-    def restoreStats(self, _date = time.strftime("%Y%m%d")):
+    def restoreStats(self, dat=time.strftime("%Y%m%d")):
         """Restore stored stats to the day if there are any"""
-        self.getStats().updateRecords(_date)
+        self.getStats().updateRecords(dat)
 
-    def storeStats(self, _date = time.strftime("%Y%m%d")):
+    def storeStats(self, dat=time.strftime("%Y%m%d")):
         """Store stats into file to make them persistent"""
-        self.getStats().storeRecords(_date)
+        self.getStats().storeRecords(dat)
 
     def restoreActivities(self):
         """Restore stored activities"""
@@ -86,7 +87,7 @@ class Waktu(object):
             os.remove('.todolist.tree')
 
         for statFile in os.listdir('stats'):
-            os.remove('stats/'+statFile)
+            os.remove('stats/' + statFile)
 
         self.getCategories().clearCategories()
         self.getTodolist().clearTodolist()

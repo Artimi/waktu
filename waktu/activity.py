@@ -4,22 +4,24 @@
 import pickle
 import os
 
+
 class Activity:
-    def __init__(self, _name='', _pid=0):
-        self.name = _name
-        self.pid = _pid
+    def __init__(self, name='', pid=0):
+        self.name = name
+        self.pid = pid
 
     def getName(self):
         return self.name
 
-    def setName(self, _name):
-        self.name = _name
+    def setName(self, name):
+        self.name = name
 
     def getPid(self):
         return self.pid
 
-    def setPid(self, _pid):
-        self.pid = _pid
+    def setPid(self, pid):
+        self.pid = pid
+
 
 class Activities:
     def __init__(self):
@@ -29,10 +31,10 @@ class Activities:
     def getActivities(self):
         return self.activities
 
-    def addActivity(self, _activity):
+    def addActivity(self, activity):
         """Add _activity to the set. Automatically skip
         already added activities"""
-        self.activities.add(_activity)
+        self.activities.add(activity)
 
     def restoreActivities(self):
         """Restore stored activities"""

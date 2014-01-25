@@ -6,40 +6,41 @@ import pickle
 import os
 import time
 
+
 class Stats:
     """Statistics class, handles records of an array"""
     def __init__(self):
         self.activityRecords = deque()
 
-    def appendActivityRecord(self, _activityRecord):
-        self.activityRecords.append(_activityRecord)
+    def appendActivityRecord(self, activityRecord):
+        self.activityRecords.append(activityRecord)
 
     def lastActivityRecord(self):
         return self.activityRecords[-1]
 
-    def getLastOccurrence(self, _activityName):
+    def getLastOccurrence(self, activityName):
         """Return the last occurrence of an activityRecord by given name"""
         for ar in reversed(self.activityRecords):
-            if ar.getActivity().getName() == _activityName:
+            if ar.getActivity().getName() == activityName:
                 return ar
         return None
 
-    def updateRecords(self, _date=time.strftime("%Y%m%d")):
+    def updateRecords(self, date=time.strftime("%Y%m%d")):
         """Open data file with stats and update records"""
-        _filename = 'stats/' + _date + '.dat'
-        if os.path.exists(_filename):
-            f = open(_filename)
+        filename = 'stats/' + date + '.dat'
+        if os.path.exists(filename):
+            f = open(filename)
             self.activityRecords = pickle.load(f)
             f.close()
             return True
         else:
             return False
 
-    def storeRecords(self, _date=time.strftime("%Y%m%d")):
+    def storeRecords(self, date=time.strftime("%Y%m%d")):
         """Store the activityRecords structure into file"""
-        _filename = 'stats/' + _date + '.dat'
-        f = open(_filename,'w+')
-        pickle.dump(self.activityRecords,f)
+        filename = 'stats/' + date + '.dat'
+        f = open(filename, 'w+')
+        pickle.dump(self.activityRecords, f)
         f.close()
 
     def get_pie_summary(self):

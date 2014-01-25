@@ -1,29 +1,31 @@
 #!/usr/bin/env python2.7
 #-*- coding: UTF-8 -*-
 
-import pickle, os
-from datetime import date, time, timedelta
+import pickle
+import os
+from datetime import date, time
+
 
 class TodoList:
     """Todo list to appropriate day"""
-    def __init__(self, _plans = {}):
+    def __init__(self, plans={}):
         self.plans = {}
-        self.addPlan(_plans)
+        self.addPlan(plans)
 
     def getPlans(self):
         """Return all plans to this day"""
         return self.plans
 
-    def addPlan(self, _plan):
+    def addPlan(self, plan):
         """Add plan  to this day. Also works as update"""
-        for key, value in _plan.iteritems():
-            if not value == None:
+        for key, value in plan.iteritems():
+            if not value is None:
                 self.plans[key] = value
 
-    def removePlan(self, _plan):
+    def removePlan(self, plan):
         """Remove plan from this day"""
-        if _plan in self.plans:
-            del self.plans[_plan]
+        if plan in self.plans:
+            del self.plans[plan]
             return True
         else:
             return False
@@ -36,33 +38,33 @@ class TodoListContainer:
         self.todolistFile = ".todolist.tree"
 
     def fillTodolist(self):
-        t = {date(2012,12,5) : {"A" : time(1), "B" : time(4)}}
+        t = {date(2012, 12, 5): {"A": time(1), "B": time(4)}}
         self.addTodolist(t)
-        t = { date(2012,12,6) : {"A" : time(0,50), "B" : time(0,30)}}
+        t = {date(2012, 12, 6): {"A": time(0, 50), "B": time(0, 30)}}
         self.addTodolist(t)
-        t = {date(2012,12,10) : {"B" : time(10)}}
+        t = {date(2012, 12, 10): {"B": time(10)}}
         self.addTodolist(t)
 
-    def addTodolist(self, _lst):
+    def addTodolist(self, lst):
         """Add todolist to appropriate day. Also works as update"""
-        for key, value in _lst.iteritems():
-            if not value == None:
+        for key, value in lst.iteritems():
+            if not value is None:
                 self.todolists[key] = TodoList(value)
         self.storeTodolist()
 
     def getTodolists(self):
         return self.todolists
 
-    def removeTodolist(self, _date):
+    def removeTodolist(self, dat):
         """Remove todolist from given day. It's like 'clear all day todolists'"""
-        if _date in self.todolists:
-            del self.todolists[_date]
+        if dat in self.todolists:
+            del self.todolists[dat]
         self.storeCategories()
 
-    def findTodolist(self, _date):
+    def findTodolist(self, dat):
         """Return todolist to requested day or None if not found"""
-        if _date in self.todolists:
-            return self.todolists[_date]
+        if dat in self.todolists:
+            return self.todolists[dat]
         return None
 
     def restoreTodolist(self):
