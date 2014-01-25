@@ -227,7 +227,7 @@ class WaktuGui(Gtk.Window):
     def update_activity_treestore(self):
         self.activities = self.waktu.getActivities()
         activityListstore = Gtk.ListStore(str)
-        for activity in self.activities.getActivities():
+        for activity in self.activities:
             activityListstore.append([activity])
         self.activityTreeview.set_model(activityListstore)
         self.activityTreeview.expand_all()

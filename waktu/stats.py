@@ -21,7 +21,7 @@ class Stats:
     def getLastOccurrence(self, activityName):
         """Return the last occurrence of an activityRecord by given name"""
         for ar in reversed(self.activityRecords):
-            if ar.getActivity().getName() == activityName:
+            if ar.getActivity().name == activityName:
                 return ar
         return None
 

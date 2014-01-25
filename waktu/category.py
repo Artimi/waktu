@@ -15,10 +15,6 @@ class Category(object):
         self.add_activity(activity)
         self.tarif = tarif
 
-    @property
-    def activities(self):
-        return self.activities
-
     def add_activity(self, activity):
         if isinstance(activity, str):
             self.activities.add(activity)
@@ -111,7 +107,7 @@ class CategoryContainer:
         is included"""
         result = []
         for category in self.categories:
-            if category.containsActivity(activity.getName()):
+            if category.containsActivity(activity.name):
                 result.append(category)
         return result
 

@@ -63,21 +63,21 @@ class TimeTracker(Thread):
                 Gdk.threads_leave()
                 continue
 
-            if self.lastActivity.getActivity().getPid() == appPid:
+            if self.lastActivity.getActivity().pid == appPid:
                 """Still the same activity, just actualize the end time"""
                 self.lastActivity.setEndTime(time())
 
             else:
                 """New activity, actualize the lastActivity and append
                 the new activity"""
-                if self.lastActivity.getActivity().getPid() != 0:
+                if self.lastActivity.getActivity().pid != 0:
                     tmp = copy.deepcopy(self.lastActivity)
                     self.stat.appendActivityRecord(tmp)
-                    self.activities.addActivity(tmp.getActivity().getName())
-                    print "DBG: Zmena aktivity! Ulozena aktivita %s (%s)" % (tmp.getActivity().getName(), tmp.getCategory())
+                    self.activities.addActivity(tmp.getActivity().name)
+                    print "DBG: Zmena aktivity! Ulozena aktivita %s (%s)" % (tmp.getActivity().name, tmp.getCategory())
 
-                self.lastActivity.getActivity().setName(appName)
-                self.lastActivity.getActivity().setPid(appPid)
+                self.lastActivity.getActivity().name = appName
+                self.lastActivity.getActivity().pid = appPid
                 self.lastActivity.setCategory('OTHER')
                 self.getCorrectCategory()
                 self.lastActivity.setStartTime(time())
@@ -88,11 +88,11 @@ class TimeTracker(Thread):
         if self.track.isSet() and not self.mode.isSet():
             tmp = copy.deepcopy(self.lastActivity)
             self.stat.appendActivityRecord(tmp)
-            print "DBG: Ulozena aktivita %s (%s)" % (tmp.getActivity().getName(), tmp.getCategory())
+            print "DBG: Ulozena aktivita %s (%s)" % (tmp.getActivity().name, tmp.getCategory())
 
         """Store all records to file to make them persistent"""
         self.stat.storeRecords()
-        self.activities.storeActivities()
+        self.activities.store()
 
     def stop(self):
         """Stop the tracking system, uses id stored in initialization"""
@@ -113,7 +113,7 @@ class TimeTracker(Thread):
         else:
             """The activity is in more than one category.
             The Waktu needs to ask user."""
-            lastOccurrence = self.stat.getLastOccurrence(activity.getName())
+            lastOccurrence = self.stat.getLastOccurrence(activity.name)
             # 10 minutes is the default time to remember users choice
             if lastOccurrence is None or (time() - lastOccurrence.getEndTime()) > 600:
                 self.askUser(activity, activityCategories)
@@ -145,9 +145,9 @@ class TimeTracker(Thread):
         """Process user answer and delegate result"""
         n.close()
 
-        if self.lastActivity.getActivity().getName() == data.getName():
+        if self.lastActivity.getActivity().name == data.name:
             """The focused app is still the same"""
             self.lastActivity.setCategory(action)
         else:
             """There is another activity, need to find it backwards"""
-            self.stat.getLastOccurrence(data.getName()).setCategory(action)
+            self.stat.getLastOccurrence(data.name).setCategory(action)

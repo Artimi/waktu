@@ -69,11 +69,11 @@ class Waktu(object):
 
     def restoreActivities(self):
         """Restore stored activities"""
-        self.getActivities().restoreActivities()
+        self.getActivities().restore()
 
     def storeActivities(self):
         """Store activities into file to make them persistent"""
-        self.getActivities().storeActivities()
+        self.getActivities().store()
 
     def clearAllData(self):
         """Clear all user created data"""
@@ -93,4 +93,4 @@ class Waktu(object):
         self.getTodolist().clearTodolist()
         self.getStats().clearStats()
         self.restoreConfiguration()
-        self.getActivities().clearActivities()
+        self.getActivities().clear()
