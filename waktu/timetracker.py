@@ -25,12 +25,12 @@ class TimeTracker(Thread):
         self.n = Notify.Notification()
         self.tmpName = ''
 
-        if configuration.getValue('state'):
+        if configuration['state']:
             self.track.set()
         else:
             self.track.clear()
 
-        if configuration.getValue('mode'):
+        if configuration['mode']:
             self.mode.set()
         else:
             self.mode.clear()

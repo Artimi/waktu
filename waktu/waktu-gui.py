@@ -263,8 +263,8 @@ class WaktuGui(Gtk.Window):
 
     def set_defaults(self):
         """Set the default values"""
-        mode = self.waktu.configuration.getValue("mode")
-        state = self.waktu.configuration.getValue("state")
+        mode = self.waktu.configuration["mode"]
+        state = self.waktu.configuration["state"]
 
         modeText = self.builder.get_object('modeTextView')
         if mode == 0:
@@ -309,7 +309,7 @@ class WaktuGui(Gtk.Window):
             modeText.set_buffer(self.builder.get_object('modeTextBufferLearn'))
             self.trackingCore.mode.set()
 
-        self.waktu.getConfiguration().setValue('mode', mode)
+        self.waktu.getConfiguration()['mode'] = mode
 
     def on_state_toggled(self, button=None):
         if button.get_active():
@@ -324,7 +324,7 @@ class WaktuGui(Gtk.Window):
         else:
             self.trackingCore.track.clear()
 
-        self.waktu.getConfiguration().setValue('state', state)
+        self.waktu.getConfiguration()['state'] = state
 
     def on_gtk_about_clicked(self,  data=None):
         if self.aboutdialog is None:

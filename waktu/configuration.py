@@ -13,15 +13,15 @@ class Configuration:
     def setDefaults(self):
         """Set the default configuration in case there is
         no configuration set already"""
-        self.setValue("mode", 0)
-        self.setValue("state", 1)
+        self["mode"] = 0
+        self["state"] = 1
         self.storeConfiguration()
 
-    def getValue(self, option):
+    def __getitem__(self, option):
         """Get the value of the option"""
         return self.configuration[option]
 
-    def setValue(self, option, value):
+    def __setitem__(self, option, value):
         """Set the option to the value"""
         self.configuration[option] = value
         self.storeConfiguration()
