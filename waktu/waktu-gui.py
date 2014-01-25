@@ -126,7 +126,7 @@ class WaktuGui(Gtk.Window):
                 self.todolist_calendar.mark_day(int(day.day))
         #todolist_category_combobox
         self.builder.get_object('todolist_time_entry').set_text("")
-        categories = self.waktu.getCategories().getCategories()
+        categories = self.waktu.getCategories().categories
         todolist_category_comboboxtext = self.builder.get_object('todolist_category_comboboxtext')
         todolist_category_comboboxtext.get_model().clear()
         for cat in categories:
@@ -217,7 +217,7 @@ class WaktuGui(Gtk.Window):
     def update_category_treestore(self):
         self.categories = self.waktu.getCategories()
         self.category_treestore = Gtk.TreeStore(str)
-        for cat in self.categories.getCategories():
+        for cat in self.categories.categories:
             category_iter = self.category_treestore.append(None, [cat.name])
             for activity in cat.activities:
                 self.category_treestore.append(category_iter, [activity])
@@ -459,7 +459,7 @@ class WaktuGui(Gtk.Window):
                 treeiter = parent
             category_name = model[treeiter][0]
             self.current_category = None
-            for cat in self.categories.getCategories():
+            for cat in self.categories.categories:
                 if category_name == cat.name:
                     self.current_category = cat
             if self.current_category is not None:

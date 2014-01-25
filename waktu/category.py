@@ -72,9 +72,6 @@ class CategoryContainer:
         c = Category("Zabava", [])
         self.addCategory(c)
 
-    def getCategories(self):
-        return self.categories
-
     def addCategory(self, category):
         if isinstance(category, Category):
             self.categories.add(category)
