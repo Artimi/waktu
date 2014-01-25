@@ -23,10 +23,13 @@ class WaktuGui(Gtk.Window):
         self.waktu.restoreStats()
         self.waktu.restoreConfiguration()
         self.waktu.restoreActivities()
-        #self.waktu.getTodolist().fillTodolist()
-        #self.waktu.getCategories().fillCategory()
+        #self.waktu.todolist.fillTodolist()
+        #self.waktu.categories.fillCategory()
 
-        self.trackingCore = TimeTracker(self.waktu.getStats(), self.waktu.getCategories(), self.waktu.getActivities(), self.waktu.getConfiguration())
+        self.trackingCore = TimeTracker(self.waktu.stats,
+                                        self.waktu.categories,
+                                        self.waktu.activities,
+                                        self.waktu.configuration)
 
         self.gladefile = 'waktu2.glade'
         self.builder = Gtk.Builder()
@@ -109,7 +112,7 @@ class WaktuGui(Gtk.Window):
         self.todolist_treeview.append_column(time_column)
 
     def update_todolist(self, date_td=date.today()):
-        todolist = self.waktu.getTodolist().findTodolist(date_td)
+        todolist = self.waktu.todolist.findTodolist(date_td)
         if todolist is not None:
             plans = todolist.getPlans()
         self.todolist_treestore = Gtk.ListStore(str, str)
@@ -120,13 +123,13 @@ class WaktuGui(Gtk.Window):
         #update calendar
         self.todolist_calendar = self.builder.get_object('todolist_calendar')
         self.todolist_calendar.clear_marks()
-        todolists = self.waktu.getTodolist().getTodolists()
+        todolists = self.waktu.todolist.getTodolists()
         for day in todolists.keys():
             if day.month == date_td.month:
                 self.todolist_calendar.mark_day(int(day.day))
         #todolist_category_combobox
         self.builder.get_object('todolist_time_entry').set_text("")
-        categories = self.waktu.getCategories().categories
+        categories = self.waktu.categories.categories
         todolist_category_comboboxtext = self.builder.get_object('todolist_category_comboboxtext')
         todolist_category_comboboxtext.get_model().clear()
         for cat in categories:
@@ -144,13 +147,13 @@ class WaktuGui(Gtk.Window):
 
             category_iter = model.get_iter(pathStr[0])
 
-            if not self.waktu.getCategories().findCategory(model[category_iter][0]).containsActivity(text[-1]):
+            if not self.waktu.categories.findCategory(model[category_iter][0]).containsActivity(text[-1]):
                 model.append(category_iter, [text[-1]])
-                self.waktu.getCategories().findCategory(model[category_iter][0]).add_activity(text[-1])
+                self.waktu.categories.findCategory(model[category_iter][0]).add_activity(text[-1])
 
             if len(text) == 2:
                 category_name_src = text[0]
-                self.waktu.getCategories().findCategory(category_name_src).delete_activity(text[-1])
+                self.waktu.categories.findCategory(category_name_src).delete_activity(text[-1])
 
             self.waktu.storeCategories()
 
@@ -161,7 +164,7 @@ class WaktuGui(Gtk.Window):
             path, position = drop_info
             cat, text = data.get_text().split(":")
 
-            self.waktu.getCategories().findCategory(cat).delete_activity(text)
+            self.waktu.categories.findCategory(cat).delete_activity(text)
             self.waktu.storeCategories()
 
     def set_activity_treeview(self):
@@ -201,8 +204,8 @@ class WaktuGui(Gtk.Window):
         data.set_text(text, -1)
 
     def update_statistics_treestrore(self):
-        pie_summary = self.waktu.getStats().get_pie_summary()
-        todolist = self.waktu.getTodolist().findTodolist(date.today())
+        pie_summary = self.waktu.stats.get_pie_summary()
+        todolist = self.waktu.todolist.findTodolist(date.today())
         self.statistics_liststore = Gtk.ListStore(str, str, str)
         for index in range(len(pie_summary['categories'])):
             cat = pie_summary['categories'][index]
@@ -215,7 +218,7 @@ class WaktuGui(Gtk.Window):
         self.statistics_treeview.set_model(self.statistics_liststore)
 
     def update_category_treestore(self):
-        self.categories = self.waktu.getCategories()
+        self.categories = self.waktu.categories
         self.category_treestore = Gtk.TreeStore(str)
         for cat in self.categories.categories:
             category_iter = self.category_treestore.append(None, [cat.name])
@@ -225,7 +228,7 @@ class WaktuGui(Gtk.Window):
         self.category_treeview.expand_all()
 
     def update_activity_treestore(self):
-        self.activities = self.waktu.getActivities()
+        self.activities = self.waktu.activities
         activityListstore = Gtk.ListStore(str)
         for activity in self.activities:
             activityListstore.append([activity])
@@ -254,7 +257,7 @@ class WaktuGui(Gtk.Window):
 
     def update_statistic(self):
         self.graph.clear()
-        pie_summary = self.waktu.getStats().get_pie_summary()
+        pie_summary = self.waktu.stats.get_pie_summary()
         total = sum(pie_summary['values'])
         self.graph.pie(pie_summary['values'], labels=pie_summary['categories'],
                        autopct=lambda pct: '{p: 2.1f}% ({v:s})'.format(p=pct, v=str(timedelta(seconds=int(pct * total / 100.0)))),
@@ -309,7 +312,7 @@ class WaktuGui(Gtk.Window):
             modeText.set_buffer(self.builder.get_object('modeTextBufferLearn'))
             self.trackingCore.mode.set()
 
-        self.waktu.getConfiguration()['mode'] = mode
+        self.waktu.configuration['mode'] = mode
 
     def on_state_toggled(self, button=None):
         if button.get_active():
@@ -324,7 +327,7 @@ class WaktuGui(Gtk.Window):
         else:
             self.trackingCore.track.clear()
 
-        self.waktu.getConfiguration()['state'] = state
+        self.waktu.configuration['state'] = state
 
     def on_gtk_about_clicked(self,  data=None):
         if self.aboutdialog is None:
@@ -381,11 +384,11 @@ class WaktuGui(Gtk.Window):
         if date_str != "" and cat_str is not None and time_str != "":
             date_td = datetime.strptime(date_str, "%Y-%m-%d").date()
             time_td = datetime.strptime(time_str, "%H:%M").time()
-            todolist = self.waktu.getTodolist().findTodolist(date_td)
+            todolist = self.waktu.todolist.findTodolist(date_td)
             if todolist is not None:
                 todolist.addPlan({cat_str: time_td})
             else:
-                self.waktu.getTodolist().addTodolist({date_td: {cat_str: time_td}})
+                self.waktu.todolist.addTodolist({date_td: {cat_str: time_td}})
         else:
             self.notify_strong("Musíte zadat všechny údaje!")
         self.on_todolist_calendar_day_selected(self.builder.get_object('todolist_calendar'))
@@ -395,7 +398,7 @@ class WaktuGui(Gtk.Window):
         cat_str = self.builder.get_object('todolist_category_comboboxtext').get_active_id()
         if date_str != "" and cat_str is not None:
             date_td = datetime.strptime(date_str, "%Y-%m-%d").date()
-            todolist = self.waktu.getTodolist().findTodolist(date_td)
+            todolist = self.waktu.todolist.findTodolist(date_td)
             if todolist is not None:
                 if todolist.removePlan(cat_str) is False:
                     self.notify_strong("Na " + str(date_td) + " není naplánována činnost " + cat_str + ".")
@@ -424,7 +427,7 @@ class WaktuGui(Gtk.Window):
             c.tarif = (tarif, unit)
         else:
             c.tarif = ()
-        self.waktu.getCategories().addCategory(c)
+        self.waktu.categories.addCategory(c)
         self.update_category_treestore()
 
     def on_category_edit_button_clicked(self, button, data=None):
@@ -442,12 +445,12 @@ class WaktuGui(Gtk.Window):
         if self.current_category is None:
             return
 
-        self.waktu.getCategories().editCategory(self.current_category, c)
+        self.waktu.categories.editCategory(self.current_category, c)
         self.update_category_treestore()
 
     def on_category_delete_button_clicked(self, button, data=None):
         name = self.builder.get_object('category_name_entry').get_text()
-        self.waktu.getCategories().deleteCategory(name)
+        self.waktu.categories.deleteCategory(name)
         self.update_category_treestore()
         #TODO: move activities in category.
 

@@ -20,60 +20,45 @@ class Waktu(object):
         self.configuration = Configuration()
         self.activities = Activities()
 
-    def getCategories(self):
-        return self.categories
-
-    def getTodolist(self):
-        return self.todolist
-
-    def getStats(self):
-        return self.stats
-
-    def getConfiguration(self):
-        return self.configuration
-
-    def getActivities(self):
-        return self.activities
-
     def restoreCategories(self):
         """Restore stored categories"""
-        self.getCategories().restoreCategories()
+        self.categories.restoreCategories()
 
     def storeCategories(self):
         """Store categories into file to make them persistent"""
-        self.getCategories().storeCategories()
+        self.categories.storeCategories()
 
     def restoreTodolist(self):
         """Restore stored todolist"""
-        self.getTodolist().restoreTodolist()
+        self.todolist.restoreTodolist()
 
     def storeTodolist(self):
         """Store todolist into file to make them persistent"""
-        self.getTodolist().storeTodolist()
+        self.todolist.storeTodolist()
 
     def restoreConfiguration(self):
         """Restore stored configuration"""
-        self.getConfiguration().restoreConfiguration()
+        self.configuration.restoreConfiguration()
 
     def storeConfiguration(self):
         """Store configuration into file to make them persistent"""
-        self.getConfiguration().storeConfiguration()
+        self.configuration.storeConfiguration()
 
     def restoreStats(self, dat=time.strftime("%Y%m%d")):
         """Restore stored stats to the day if there are any"""
-        self.getStats().updateRecords(dat)
+        self.stats.updateRecords(dat)
 
     def storeStats(self, dat=time.strftime("%Y%m%d")):
         """Store stats into file to make them persistent"""
-        self.getStats().storeRecords(dat)
+        self.stats.storeRecords(dat)
 
     def restoreActivities(self):
         """Restore stored activities"""
-        self.getActivities().restore()
+        self.activities.restore()
 
     def storeActivities(self):
         """Store activities into file to make them persistent"""
-        self.getActivities().store()
+        self.activities.store()
 
     def clearAllData(self):
         """Clear all user created data"""
@@ -89,8 +74,8 @@ class Waktu(object):
         for statFile in os.listdir('stats'):
             os.remove('stats/' + statFile)
 
-        self.getCategories().clearCategories()
-        self.getTodolist().clearTodolist()
-        self.getStats().clearStats()
+        self.categories.clearCategories()
+        self.todolist.clearTodolist()
+        self.stats.clearStats()
         self.restoreConfiguration()
-        self.getActivities().clear()
+        self.activities.clear()
