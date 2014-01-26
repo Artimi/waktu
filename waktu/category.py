@@ -64,14 +64,6 @@ class CategoryContainer:
         self.categories = set()
         self.categoryFile = categoryFile
 
-    def fillCategory(self):
-        c = Category("Projekt ABC", ["Firefox", "CodeBlocks", "gedit", "Terminal"], (120, "CZK"))
-        self.addCategory(c)
-        c = Category("Projekt XYZ", ["Firefox", "Terminal"], (100, "CZK"))
-        self.addCategory(c)
-        c = Category("Zabava", [])
-        self.addCategory(c)
-
     def addCategory(self, category):
         if isinstance(category, Category):
             self.categories.add(category)

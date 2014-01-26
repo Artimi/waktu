@@ -3,7 +3,6 @@
 
 import pickle
 import os
-from datetime import date, time
 
 
 class TodoList:
@@ -36,14 +35,6 @@ class TodoListContainer:
     def __init__(self, todolistFile):
         self.todolists = {}
         self.todolistFile = todolistFile
-
-    def fillTodolist(self):
-        t = {date(2012, 12, 5): {"A": time(1), "B": time(4)}}
-        self.addTodolist(t)
-        t = {date(2012, 12, 6): {"A": time(0, 50), "B": time(0, 30)}}
-        self.addTodolist(t)
-        t = {date(2012, 12, 10): {"B": time(10)}}
-        self.addTodolist(t)
 
     def addTodolist(self, lst):
         """Add todolist to appropriate day. Also works as update"""

@@ -24,8 +24,6 @@ class WaktuGui(Gtk.Window):
         self.waktu.restoreStats()
         self.waktu.restoreConfiguration()
         self.waktu.restoreActivities()
-        #self.waktu.todolist.fillTodolist()
-        #self.waktu.categories.fillCategory()
 
         self.trackingCore = TimeTracker(self.waktu.stats,
                                         self.waktu.categories,
