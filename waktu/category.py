@@ -60,9 +60,9 @@ class Category(object):
 
 class CategoryContainer:
     """Container of categories"""
-    def __init__(self):
+    def __init__(self, categoryFile):
         self.categories = set()
-        self.categoryFile = ".categories.tree"
+        self.categoryFile = categoryFile
 
     def fillCategory(self):
         c = Category("Projekt ABC", ["Firefox", "CodeBlocks", "gedit", "Terminal"], (120, "CZK"))

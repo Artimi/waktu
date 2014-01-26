@@ -33,9 +33,9 @@ class TodoList:
 
 class TodoListContainer:
     """Container of todolists"""
-    def __init__(self):
+    def __init__(self, todolistFile):
         self.todolists = {}
-        self.todolistFile = ".todolist.tree"
+        self.todolistFile = todolistFile
 
     def fillTodolist(self):
         t = {date(2012, 12, 5): {"A": time(1), "B": time(4)}}

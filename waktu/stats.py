@@ -9,8 +9,9 @@ import time
 
 class Stats:
     """Statistics class, handles records of an array"""
-    def __init__(self):
+    def __init__(self, statsDir):
         self.activityRecords = deque()
+        self.statsDir = statsDir
 
     def appendActivityRecord(self, activityRecord):
         self.activityRecords.append(activityRecord)
@@ -27,7 +28,7 @@ class Stats:
 
     def updateRecords(self, date=time.strftime("%Y%m%d")):
         """Open data file with stats and update records"""
-        filename = 'stats/' + date + '.dat'
+        filename = self.statsDir + date + '.dat'
         if os.path.exists(filename):
             with open(filename) as f:
                 self.activityRecords = pickle.load(f)
@@ -37,7 +38,7 @@ class Stats:
 
     def storeRecords(self, date=time.strftime("%Y%m%d")):
         """Store the activityRecords structure into file"""
-        filename = 'stats/' + date + '.dat'
+        filename = self.statsDir + date + '.dat'
         with open(filename, 'w+') as f:
             pickle.dump(self.activityRecords, f)
 

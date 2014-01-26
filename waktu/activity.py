@@ -12,9 +12,9 @@ class Activity:
 
 
 class Activities:
-    def __init__(self):
+    def __init__(self, activitiesFile):
         self.activities = set()
-        self.activitiesFile = ".activities"
+        self.activitiesFile = activitiesFile
 
     def __iter__(self):
         return iter(self.activities)

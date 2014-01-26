@@ -14,11 +14,26 @@ class Waktu(object):
     """Main class of Waktu project"""
 
     def __init__(self):
-        self.categories = CategoryContainer()
-        self.todolist = TodoListContainer()
-        self.stats = Stats()
-        self.configuration = Configuration()
-        self.activities = Activities()
+        self.setConfigPaths()
+        self.categories = CategoryContainer(self.configPath['categories'])
+        self.todolist = TodoListContainer(self.configPath['todolist'])
+        self.stats = Stats(self.configPath['stats'])
+        self.configuration = Configuration(self.configPath['configuration'])
+        self.activities = Activities(self.configPath['activities'])
+
+    def setConfigPaths(self):
+        self.configDir = os.path.expanduser("~/.config/waktu/")
+        if not os.path.isdir(self.configDir):
+            os.mkdir(self.configDir)
+        self.configPath = {
+            'categories': self.configDir + 'categories.tree',
+            'activities': self.configDir + 'activities',
+            'configuration': self.configDir + 'configuration',
+            'todolist': self.configDir + 'todolist.tree',
+            'stats': self.configDir + 'stats/'
+        }
+        if not os.path.isdir(self.configPath['stats']):
+            os.mkdir(self.configPath['stats'])
 
     def restoreCategories(self):
         """Restore stored categories"""

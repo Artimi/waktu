@@ -6,9 +6,9 @@ import os
 
 
 class Configuration:
-    def __init__(self):
+    def __init__(self, confFile):
         self.configuration = {}
-        self.confFile = ".configuration"
+        self.confFile = confFile
 
     def setDefaults(self):
         """Set the default configuration in case there is
