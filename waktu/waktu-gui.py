@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 #-*- coding: UTF-8 -*-
 
+import logging
 from gi.repository import Gtk, Gdk, GObject
 from waktu import Waktu
 import category
@@ -295,7 +296,7 @@ class WaktuGui(Gtk.Window):
 
     #Main window signals
     def on_window1_destroy(self, object, data=None):
-        print "quit with cross"
+        logging.debug("quit with cross")
         self.trackingCore.stop()
         Gtk.main_quit()
 
@@ -332,7 +333,7 @@ class WaktuGui(Gtk.Window):
     def on_gtk_about_clicked(self,  data=None):
         if self.aboutdialog is None:
             self.aboutdialog = self.builder.get_object('aboutdialog')
-        print 'settngs about clicked'
+        logging.debug('settngs about clicked')
         self.response = self.aboutdialog.run()
         self.aboutdialog.hide()
 
@@ -363,7 +364,7 @@ class WaktuGui(Gtk.Window):
 
 #Statistics panel signals
     def on_statistics_timerange_combobox_changed(self, combobox, data=None):
-        print combobox.get_active()
+        logging.debug(combobox.get_active())
 
     def on_statistics_categoriesfilter_combobox_changed(self, combobox, data=None):
         pass
@@ -431,7 +432,7 @@ class WaktuGui(Gtk.Window):
         self.update_category_treestore()
 
     def on_category_edit_button_clicked(self, button, data=None):
-        print "edit button clicked"
+        logging.debug("edit button clicked")
         c = category.Category()
         c.name = self.builder.get_object('category_name_entry').get_text()
         tarif = self.builder.get_object('category_tarif_entry').get_text()
@@ -475,6 +476,8 @@ class WaktuGui(Gtk.Window):
                     self.builder.get_object('category_unit_entry').set_text("")
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG,
+                        format="%(levelname)s, %(asctime)s, %(message)s")
     GObject.threads_init()
     main = WaktuGui()
     Gdk.threads_init()

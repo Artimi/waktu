@@ -6,6 +6,7 @@ from activityrecord import ActivityRecord
 from threading import Thread, Event
 from time import sleep, time
 import copy
+import logging
 
 
 class TimeTracker(Thread):
@@ -59,7 +60,7 @@ class TimeTracker(Thread):
 
             """If the learning mode is activive, only append an activity"""
             if self.mode.isSet():
-                self.activities.addActivity(appName)
+                self.activities.add(appName)
                 Gdk.threads_leave()
                 continue
 
@@ -73,8 +74,8 @@ class TimeTracker(Thread):
                 if self.lastActivity.activity.pid != 0:
                     tmp = copy.deepcopy(self.lastActivity)
                     self.stat.appendActivityRecord(tmp)
-                    self.activities.addActivity(tmp.activity.name)
-                    print "DBG: Zmena aktivity! Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category)
+                    self.activities.add(tmp.activity.name)
+                    logging.debug("DBG: Zmena aktivity! Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category))
 
                 self.lastActivity.activity.name = appName
                 self.lastActivity.activity.pid = appPid
@@ -88,7 +89,7 @@ class TimeTracker(Thread):
         if self.track.isSet() and not self.mode.isSet():
             tmp = copy.deepcopy(self.lastActivity)
             self.stat.appendActivityRecord(tmp)
-            print "DBG: Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category)
+            logging.debug("DBG: Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category))
 
         """Store all records to file to make them persistent"""
         self.stat.storeRecords()
