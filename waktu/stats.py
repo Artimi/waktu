@@ -29,9 +29,8 @@ class Stats:
         """Open data file with stats and update records"""
         filename = 'stats/' + date + '.dat'
         if os.path.exists(filename):
-            f = open(filename)
-            self.activityRecords = pickle.load(f)
-            f.close()
+            with open(filename) as f:
+                self.activityRecords = pickle.load(f)
             return True
         else:
             return False
@@ -39,9 +38,8 @@ class Stats:
     def storeRecords(self, date=time.strftime("%Y%m%d")):
         """Store the activityRecords structure into file"""
         filename = 'stats/' + date + '.dat'
-        f = open(filename, 'w+')
-        pickle.dump(self.activityRecords, f)
-        f.close()
+        with open(filename, 'w+') as f:
+            pickle.dump(self.activityRecords, f)
 
     def get_pie_summary(self):
         pie_summary = {}

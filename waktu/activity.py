@@ -27,15 +27,13 @@ class Activities:
     def restore(self):
         """Restore stored activities"""
         if os.path.exists(self.activitiesFile):
-            f = open(self.activitiesFile)
-            self.activities = pickle.load(f)
-            f.close()
+            with open(self.activitiesFile) as f:
+                self.activities = pickle.load(f)
 
     def store(self):
         """Store activities into file to make them persistent"""
-        f = open(self.activitiesFile, "w+")
-        pickle.dump(self.activities, f)
-        f.close()
+        with open(self.activitiesFile, "w+") as f:
+            pickle.dump(self.activities, f)
 
     def clear(self):
         self.activities = set()

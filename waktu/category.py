@@ -111,15 +111,13 @@ class CategoryContainer:
     def restoreCategories(self):
         """Restore stored categories"""
         if os.path.exists(self.categoryFile):
-            f = open(self.categoryFile)
-            self.categories = pickle.load(f)
-            f.close()
+            with open(self.categoryFile) as f:
+                self.categories = pickle.load(f)
 
     def storeCategories(self):
         """Store categories into file to make them persistent"""
-        f = open(self.categoryFile, "w+")
-        pickle.dump(self.categories, f)
-        f.close()
+        with open(self.categoryFile, "w+") as f:
+            pickle.dump(self.categories, f)
 
     def clearCategories(self):
         self.categories = set()

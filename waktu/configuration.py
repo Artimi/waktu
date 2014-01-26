@@ -29,14 +29,12 @@ class Configuration:
     def restoreConfiguration(self):
         """Restore stored configuration"""
         if os.path.exists(self.confFile):
-            f = open(self.confFile)
-            self.configuration = pickle.load(f)
-            f.close()
+            with open(self.confFile) as f:
+                self.configuration = pickle.load(f)
         else:
             self.setDefaults()
 
     def storeConfiguration(self):
         """Store configuration into file to make them persistent"""
-        f = open(self.confFile, "w+")
-        pickle.dump(self.configuration, f)
-        f.close()
+        with open(self.confFile, "w+") as f:
+            pickle.dump(self.configuration, f)

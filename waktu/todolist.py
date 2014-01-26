@@ -70,15 +70,13 @@ class TodoListContainer:
     def restoreTodolist(self):
         """Restore stored todolist"""
         if os.path.exists(self.todolistFile):
-            f = open(self.todolistFile)
-            self.todolists = pickle.load(f)
-            f.close()
+            with open(self.todolistFile) as f:
+                self.todolists = pickle.load(f)
 
     def storeTodolist(self):
         """Store todolist into file to make them persistent"""
-        f = open(self.todolistFile, "w+")
-        pickle.dump(self.todolists, f)
-        f.close()
+        with open(self.todolistFile, "w+") as f:
+            pickle.dump(self.todolists, f)
 
     def clearTodolist(self):
         self.todolists = {}
