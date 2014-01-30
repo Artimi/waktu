@@ -5,7 +5,7 @@ import pickle
 import os
 
 
-class Configuration:
+class Configuration(object):
     def __init__(self, confFile):
         self.configuration = {}
         self.confFile = confFile

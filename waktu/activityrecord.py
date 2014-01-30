@@ -5,7 +5,7 @@ from activity import Activity
 from time import time
 
 
-class ActivityRecord:
+class ActivityRecord(object):
     """Contains record about every activity"""
     def __init__(self, category='', activity=Activity(), startTime=time(), endTime=time()):
         self.category = category

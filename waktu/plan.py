@@ -2,7 +2,7 @@
 #-*- coding: UTF-8 -*-
 
 
-class Plan:
+class Plan(object):
     def __init__(self, category="", duration=60):
         self.category = category
         self.duration = duration

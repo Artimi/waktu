@@ -58,7 +58,7 @@ class Category(object):
         return s
 
 
-class CategoryContainer:
+class CategoryContainer(object):
     """Container of categories"""
     def __init__(self, categoryFile):
         self.categories = set()

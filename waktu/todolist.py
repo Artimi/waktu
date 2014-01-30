@@ -5,7 +5,7 @@ import pickle
 import os
 
 
-class TodoList:
+class TodoList(object):
     """Todo list to appropriate day"""
     def __init__(self, plans={}):
         self.plans = {}
@@ -30,7 +30,7 @@ class TodoList:
             return False
 
 
-class TodoListContainer:
+class TodoListContainer(object):
     """Container of todolists"""
     def __init__(self, todolistFile):
         self.todolists = {}

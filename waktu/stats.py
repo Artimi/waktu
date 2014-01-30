@@ -7,7 +7,7 @@ import os
 import time
 
 
-class Stats:
+class Stats(object):
     """Statistics class, handles records of an array"""
     def __init__(self, statsDir):
         self.activityRecords = deque()

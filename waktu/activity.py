@@ -5,13 +5,13 @@ import pickle
 import os
 
 
-class Activity:
+class Activity(object):
     def __init__(self, name='', pid=0):
         self.name = name
         self.pid = pid
 
 
-class Activities:
+class Activities(object):
     def __init__(self, activitiesFile):
         self.activities = set()
         self.activitiesFile = activitiesFile
