@@ -9,7 +9,7 @@ Automatic time-tracker
 ## Usage ##
 
 ### Travis CI ###
-Every commit neng is built and tested using Travis CI. You can see result at [neng travis page](https://travis-ci.org/Artimi/neng).
+Every commit waktu is built and tested using Travis CI. You can see result at [TBD](#).
 
 ## License ##
-This program is licensed under MIT license.
+This program is licensed under MIT license (see LICENSE file for more information).
