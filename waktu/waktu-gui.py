@@ -30,7 +30,7 @@ class WaktuGui(Gtk.Window):
                                         self.waktu.activities,
                                         self.waktu.configuration)
 
-        self.gladefile = 'waktu2.glade'
+        self.gladefile = 'waktu.glade'
         self.builder = Gtk.Builder()
         self.builder.add_from_file(self.gladefile)
         self.builder.connect_signals(self)
