@@ -26,3 +26,21 @@ class TestActivities(unittest.TestCase):
         self.assertEqual(len(self.activities), 2)
         self.activities.restore()
         self.assertEqual(len(self.activities), 1)
+
+
+class TestCategory(unittest.TestCase):
+
+    def setUp(self):
+        fd, self.file_path = tempfile.mkstemp()
+        os.close(fd)
+        self.categories = waktu.CategoryContainer(self.file_path)
+        self.category_list = [waktu.Category('cat1', 'a1')]
+
+    def tearDown(self):
+        os.remove(self.file_path)
+
+    def test_store_restore(self):
+        self.categories.addCategory(self.category_list[0])
+        self.categories.clearCategories()
+        self.categories.restoreCategories()
+        self.assertEqual(len(self.categories), 1)
