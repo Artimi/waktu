@@ -53,11 +53,11 @@ class Waktu(object):
 
     def restoreConfiguration(self):
         """Restore stored configuration"""
-        self.configuration.restoreConfiguration()
+        self.configuration.restore()
 
     def storeConfiguration(self):
         """Store configuration into file to make them persistent"""
-        self.configuration.storeConfiguration()
+        self.configuration.store()
 
     def restoreStats(self, dat=time.strftime("%Y%m%d")):
         """Restore stored stats to the day if there are any"""
