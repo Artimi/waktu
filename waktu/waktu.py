@@ -26,9 +26,9 @@ class Waktu(object):
         if not os.path.isdir(self.configDir):
             os.mkdir(self.configDir)
         self.configPath = {
-            'categories': self.configDir + 'categories.tree',
-            'activities': self.configDir + 'activities',
-            'configuration': self.configDir + 'configuration',
+            'categories': self.configDir + 'categories.json',
+            'activities': self.configDir + 'activities.json',
+            'configuration': self.configDir + 'configuration.json',
             'todolist': self.configDir + 'todolist.tree',
             'stats': self.configDir + 'stats/'
         }
@@ -77,12 +77,12 @@ class Waktu(object):
 
     def clearAllData(self):
         """Clear all user created data"""
-        if os.path.exists('.categories.tree'):
-            os.remove('.categories.tree')
-        if os.path.exists('.activities'):
-            os.remove('.activities')
-        if os.path.exists('.configuration'):
-            os.remove('.configuration')
+        if os.path.exists('.categories.json'):
+            os.remove('.categories.json')
+        if os.path.exists('.activities.json'):
+            os.remove('.activities.json')
+        if os.path.exists('.configuration.json'):
+            os.remove('.configuration.json')
         if os.path.exists('.todolist.tree'):
             os.remove('.todolist.tree')
 
