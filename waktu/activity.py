@@ -10,7 +10,7 @@ class Activity(object):
         self.name = name
         self.pid = pid
 
-    def _getContent(self):
+    def getContent(self):
         return {'name': self.name, 'pid': self.pid}
 
 
@@ -42,10 +42,10 @@ class Activities(object):
     def store(self):
         """Store activities into file to make them persistent"""
         with open(self.activitiesFile, "w+") as f:
-            json.dump(self._getContent(), f, indent=1)
+            json.dump(self.get_content(), f, indent=1)
 
     def clear(self):
         self.activities.clear()
 
-    def _getContent(self):
-        return [activity._getContent() for activity in self.activities]
+    def get_content(self):
+        return [activity.get_content() for activity in self.activities]

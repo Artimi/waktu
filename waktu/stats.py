@@ -43,7 +43,7 @@ class Stats(object):
         """Store the activityRecords structure into file"""
         filename = self.statsDir + date + '.json'
         with open(filename, 'w+') as f:
-            json.dump(self._get_content(), f)
+            json.dump(self.get_content(), f)
 
     def get_pie_summary(self):
         pie_summary = {}
@@ -61,5 +61,5 @@ class Stats(object):
     def clearStats(self):
         self.activityRecords = deque()
 
-    def _get_content(self):
-        return [activityRecord._get_content() for activityRecord in self.activityRecords]
+    def get_content(self):
+        return [activityRecord.get_content() for activityRecord in self.activityRecords]

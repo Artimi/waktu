@@ -57,7 +57,7 @@ class Category(object):
         s += "Tarif: " + str(self.tarif)
         return s
 
-    def _getcontent(self):
+    def get_content(self):
         return {'name': self.name,
                 'activities': list(self.activities),
                 'tarif': self.tarif}
@@ -125,10 +125,10 @@ class CategoryContainer(object):
     def store(self):
         """Store categories into file to make them persistent"""
         with open(self.categoryFile, 'w+') as f:
-            json.dump(self._getcontent(), f, indent=1)
+            json.dump(self.get_content(), f, indent=1)
 
     def clearCategories(self):
         self.categories = set()
 
-    def _getcontent(self):
-        return [category._getcontent() for category in self.categories]
+    def get_content(self):
+        return [category.get_content() for category in self.categories]
