@@ -29,7 +29,7 @@ class Stats(object):
                 return ar
         return None
 
-    def updateRecords(self, date=time.strftime("%Y%m%d")):
+    def restore(self, date=time.strftime("%Y%m%d")):
         """Open data file with stats and update records"""
         filename = self.statsDir + date + '.json'
         if os.path.exists(filename):
@@ -39,7 +39,7 @@ class Stats(object):
         else:
             return False
 
-    def storeRecords(self, date=time.strftime("%Y%m%d")):
+    def store(self, date=time.strftime("%Y%m%d")):
         """Store the activityRecords structure into file"""
         filename = self.statsDir + date + '.json'
         with open(filename, 'w+') as f:

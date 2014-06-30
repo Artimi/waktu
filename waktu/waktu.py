@@ -37,11 +37,11 @@ class Waktu(object):
 
     def restoreCategories(self):
         """Restore stored categories"""
-        self.categories.restoreCategories()
+        self.categories.restore()
 
     def storeCategories(self):
         """Store categories into file to make them persistent"""
-        self.categories.storeCategories()
+        self.categories.store()
 
     def restoreTodolist(self):
         """Restore stored todolist"""
@@ -61,11 +61,11 @@ class Waktu(object):
 
     def restoreStats(self, dat=time.strftime("%Y%m%d")):
         """Restore stored stats to the day if there are any"""
-        self.stats.updateRecords(dat)
+        self.stats.restore(dat)
 
     def storeStats(self, dat=time.strftime("%Y%m%d")):
         """Store stats into file to make them persistent"""
-        self.stats.storeRecords(dat)
+        self.stats.store(dat)
 
     def restoreActivities(self):
         """Restore stored activities"""

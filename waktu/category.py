@@ -79,7 +79,7 @@ class CategoryContainer(object):
             self.categories.add(category)
         elif isinstance(category, Iterable):
             self.categories.update(category)
-        self.storeCategories()  # make the change persistent
+        self.store()  # make the change persistent
         #TODO: make decorator to make functions persistent
 
     def deleteCategory(self, category):
@@ -89,12 +89,12 @@ class CategoryContainer(object):
             self.categories.difference_update(category)
         elif isinstance(category, str):
             self.categories.discard(self.findCategory(category))
-        self.storeCategories()  # make the change persistent
+        self.store()  # make the change persistent
 
     def editCategory(self, oldCategory, newCategory):
         oldCategory.name = newCategory.name
         oldCategory.tarif = newCategory.tarif
-        self.storeCategories()  # make the change persistent
+        self.store()  # make the change persistent
 
     def findCategory(self, categoryName):
         for cat in self.categories:
@@ -111,7 +111,7 @@ class CategoryContainer(object):
                 result.append(category)
         return result
 
-    def restoreCategories(self):
+    def restore(self):
         """Restore stored categories"""
         if os.path.exists(self.categoryFile):
             self.clearCategories()
@@ -122,7 +122,7 @@ class CategoryContainer(object):
                                           set(category['activities']),
                                           category['tarif']))
 
-    def storeCategories(self):
+    def store(self):
         """Store categories into file to make them persistent"""
         with open(self.categoryFile, 'w+') as f:
             json.dump(self._getcontent(), f, indent=1)
