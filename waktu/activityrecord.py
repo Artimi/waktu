@@ -7,8 +7,15 @@ from time import time
 
 class ActivityRecord(object):
     """Contains record about every activity"""
+
     def __init__(self, category='', activity=Activity(), startTime=time(), endTime=time()):
         self.category = category
         self.activity = activity
         self.startTime = startTime
         self.endTime = endTime
+
+    def _get_content(self):
+        return {'category': self.category,
+                'activity': self.activity._getContent(),
+                'startTime': self.startTime,
+                'endTime': self.endTime}

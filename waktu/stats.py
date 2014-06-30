@@ -2,7 +2,7 @@
 #-*- coding: UTF-8 -*-
 
 from collections import deque
-import pickle
+import json
 import os
 import time
 
@@ -12,6 +12,9 @@ class Stats(object):
     def __init__(self, statsDir):
         self.activityRecords = deque()
         self.statsDir = statsDir
+
+    def __len__(self):
+        return len(self.activityRecords)
 
     def appendActivityRecord(self, activityRecord):
         self.activityRecords.append(activityRecord)
@@ -28,19 +31,19 @@ class Stats(object):
 
     def updateRecords(self, date=time.strftime("%Y%m%d")):
         """Open data file with stats and update records"""
-        filename = self.statsDir + date + '.dat'
+        filename = self.statsDir + date + '.json'
         if os.path.exists(filename):
             with open(filename) as f:
-                self.activityRecords = pickle.load(f)
+                self.activityRecords = deque(json.load(f))
             return True
         else:
             return False
 
     def storeRecords(self, date=time.strftime("%Y%m%d")):
         """Store the activityRecords structure into file"""
-        filename = self.statsDir + date + '.dat'
+        filename = self.statsDir + date + '.json'
         with open(filename, 'w+') as f:
-            pickle.dump(self.activityRecords, f)
+            json.dump(self._get_content(), f)
 
     def get_pie_summary(self):
         pie_summary = {}
@@ -57,3 +60,6 @@ class Stats(object):
 
     def clearStats(self):
         self.activityRecords = deque()
+
+    def _get_content(self):
+        return [activityRecord._get_content() for activityRecord in self.activityRecords]
