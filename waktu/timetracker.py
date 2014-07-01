@@ -92,7 +92,7 @@ class TimeTracker(Thread):
             logging.debug("DBG: Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category))
 
         """Store all records to file to make them persistent"""
-        self.stat.storeRecords()
+        self.stat.store()
         self.activities.store()
 
     def stop(self):

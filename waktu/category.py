@@ -2,14 +2,14 @@
 #-*- coding: UTF-8 -*-
 
 from collections import Iterable
-import pickle
+import json
 import os
 
 
 class Category(object):
     """Category contains activities and tarification"""
 
-    def __init__(self, name="", activity=set(), tarif=()):
+    def __init__(self, name="", activity=set(), tarif=None):
         self.name = name
         self.activities = set()
         self.add_activity(activity)
@@ -57,19 +57,28 @@ class Category(object):
         s += "Tarif: " + str(self.tarif)
         return s
 
+    def get_content(self):
+        return {'name': self.name,
+                'activities': list(self.activities),
+                'tarif': self.tarif}
+
 
 class CategoryContainer(object):
     """Container of categories"""
+
     def __init__(self, categoryFile):
         self.categories = set()
         self.categoryFile = categoryFile
+
+    def __len__(self):
+        return len(self.categories)
 
     def addCategory(self, category):
         if isinstance(category, Category):
             self.categories.add(category)
         elif isinstance(category, Iterable):
             self.categories.update(category)
-        self.storeCategories()  # make the change persistent
+        self.store()  # make the change persistent
 
     def deleteCategory(self, category):
         if isinstance(category, Category):
@@ -78,12 +87,12 @@ class CategoryContainer(object):
             self.categories.difference_update(category)
         elif isinstance(category, str):
             self.categories.discard(self.findCategory(category))
-        self.storeCategories()  # make the change persistent
+        self.store()  # make the change persistent
 
     def editCategory(self, oldCategory, newCategory):
         oldCategory.name = newCategory.name
         oldCategory.tarif = newCategory.tarif
-        self.storeCategories()  # make the change persistent
+        self.store()  # make the change persistent
 
     def findCategory(self, categoryName):
         for cat in self.categories:
@@ -100,16 +109,24 @@ class CategoryContainer(object):
                 result.append(category)
         return result
 
-    def restoreCategories(self):
+    def restore(self):
         """Restore stored categories"""
         if os.path.exists(self.categoryFile):
+            self.clearCategories()
             with open(self.categoryFile) as f:
-                self.categories = pickle.load(f)
+                file_content = json.load(f)
+            for category in file_content:
+                self.addCategory(Category(category['name'],
+                                          set(category['activities']),
+                                          category['tarif']))
 
-    def storeCategories(self):
+    def store(self):
         """Store categories into file to make them persistent"""
-        with open(self.categoryFile, "w+") as f:
-            pickle.dump(self.categories, f)
+        with open(self.categoryFile, 'w+') as f:
+            json.dump(self.get_content(), f, indent=1)
 
     def clearCategories(self):
         self.categories = set()
+
+    def get_content(self):
+        return [category.get_content() for category in self.categories]

@@ -1,7 +1,7 @@
 #!/usr/bin/env python2.7
 #-*- coding: UTF-8 -*-
 
-import pickle
+import json
 import os
 
 
@@ -15,7 +15,7 @@ class Configuration(object):
         no configuration set already"""
         self["mode"] = 0
         self["state"] = 1
-        self.storeConfiguration()
+        self.store()
 
     def __getitem__(self, option):
         """Get the value of the option"""
@@ -24,17 +24,18 @@ class Configuration(object):
     def __setitem__(self, option, value):
         """Set the option to the value"""
         self.configuration[option] = value
-        self.storeConfiguration()
+        self.store()
 
-    def restoreConfiguration(self):
+    def restore(self):
         """Restore stored configuration"""
+        self.setDefaults()
         if os.path.exists(self.confFile):
             with open(self.confFile) as f:
-                self.configuration = pickle.load(f)
-        else:
-            self.setDefaults()
+                file_content = json.load(f)
+            for key, value in file_content.iteritems():
+                self.configuration[key] = value
 
-    def storeConfiguration(self):
+    def store(self):
         """Store configuration into file to make them persistent"""
-        with open(self.confFile, "w+") as f:
-            pickle.dump(self.configuration, f)
+        with open(self.confFile, 'w+') as f:
+            json.dump(self.configuration, f, indent=1)
