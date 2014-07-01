@@ -12,7 +12,6 @@ import logging
 class TimeTracker(Thread):
     """Core module of this project. It's running in separated thread
     to not block GUI."""
-    #TODO: remove docstrings that are actually only comments
     stopthread = Event()
     track = Event()
     mode = Event()

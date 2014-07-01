@@ -65,7 +65,6 @@ class Category(object):
 
 class CategoryContainer(object):
     """Container of categories"""
-    #TODO: get rid of Category suffix in names of methods
 
     def __init__(self, categoryFile):
         self.categories = set()
@@ -80,7 +79,6 @@ class CategoryContainer(object):
         elif isinstance(category, Iterable):
             self.categories.update(category)
         self.store()  # make the change persistent
-        #TODO: make decorator to make functions persistent
 
     def deleteCategory(self, category):
         if isinstance(category, Category):

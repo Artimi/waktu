@@ -451,7 +451,6 @@ class WaktuGui(Gtk.Window):
         name = self.builder.get_object('category_name_entry').get_text()
         self.waktu.categories.deleteCategory(name)
         self.update_category_treestore()
-        #TODO: move activities in category.
 
     def on_tree_selection_changed(self, selection):
         model, treeiter = selection.get_selected()
