@@ -16,6 +16,6 @@ class ActivityRecord(object):
 
     def get_content(self):
         return {'category': self.category,
-                'activity': self.activity.getContent(),
+                'activity': self.activity.get_content(),
                 'startTime': self.startTime,
                 'endTime': self.endTime}

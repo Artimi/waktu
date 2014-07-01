@@ -10,7 +10,7 @@ class Activity(object):
         self.name = name
         self.pid = pid
 
-    def getContent(self):
+    def get_content(self):
         return {'name': self.name, 'pid': self.pid}
 
 
