@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.16.1 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkAboutDialog" id="aboutdialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -82,7 +83,6 @@ SOFTWARE.</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <signal name="clicked" handler="on_delete_confirm" swapped="no"/>
               </object>
@@ -99,7 +99,6 @@ SOFTWARE.</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="use_action_appearance">False</property>
                 <property name="use_underline">True</property>
                 <signal name="clicked" handler="on_delete_discard" swapped="no"/>
               </object>
@@ -123,6 +122,16 @@ SOFTWARE.</property>
       <action-widget response="0">button3</action-widget>
       <action-widget response="0">button4</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkTextBuffer" id="modeTextBufferLearn">
+    <property name="text" translatable="yes">Aplikace je v režimu, při němž nejsou tvořeny statistiky a jsou pouze zaznamenávány aktivity, které uživatel udělal. Pokud je zjištěna doposud neprovedená aktivita a uživatel již má nastavenou alespoň jednu kategorii, je dotázán, jestli novou aktivitu nechce zařadit. Všechny aktivity jsou uloženy a uživatel je posléze muže zařadit do kategorií v záložce Kategorie.</property>
+  </object>
+  <object class="GtkTextBuffer" id="modeTextBufferTrack">
+    <property name="text" translatable="yes">Aplikace je v režimu, při němž jsou sledovány aktivity uživatele a dle nastavených kategorií je tvořena statistika. Neznámé aktivity jsou uloženy a uživatel je posléze může zařadit do kategorií v záložce Kategorie.</property>
+  </object>
+  <object class="GtkTextBuffer" id="waktuAboutTextBuffer">
+    <property name="text" translatable="yes">Verze: 0.0.1
+Datum 2014/01/31</property>
   </object>
   <object class="GtkWindow" id="mainwindow">
     <property name="can_focus">False</property>
@@ -202,8 +211,6 @@ SOFTWARE.</property>
                             <property name="can_focus">False</property>
                             <property name="active">0</property>
                             <property name="button_sensitivity">on</property>
-                            <property name="entry_text_column">0</property>
-                            <property name="id_column">1</property>
                             <items>
                               <item translatable="yes">Den</item>
                               <item translatable="yes">Týden</item>
@@ -224,8 +231,6 @@ SOFTWARE.</property>
                           <object class="GtkComboBoxText" id="comboboxtext1">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="entry_text_column">0</property>
-                            <property name="id_column">1</property>
                             <items>
                               <item translatable="yes">Koláč</item>
                             </items>
@@ -302,229 +307,6 @@ SOFTWARE.</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox" id="box3">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkBox" id="box5">
-                    <property name="width_request">270</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="margin_top">5</property>
-                    <property name="margin_bottom">5</property>
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkGrid" id="todolist_grid">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="row_spacing">5</property>
-                        <property name="column_spacing">5</property>
-                        <child>
-                          <object class="GtkLabel" id="todolist_datum_label">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Datum</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                            <property name="width">1</property>
-                            <property name="height">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkEntry" id="todolist_date_entry">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="invisible_char">●</property>
-                            <property name="width_chars">1</property>
-                            <property name="truncate_multiline">True</property>
-                            <property name="invisible_char_set">True</property>
-                            <property name="caps_lock_warning">False</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                            <property name="width">1</property>
-                            <property name="height">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="todolist_category_label">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Kategorie</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">1</property>
-                            <property name="width">1</property>
-                            <property name="height">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="todolist_time_label">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Čas</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">2</property>
-                            <property name="width">1</property>
-                            <property name="height">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkEntry" id="todolist_time_entry">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="invisible_char">●</property>
-                            <property name="invisible_char_set">True</property>
-                            <property name="progress_pulse_step">0.079999998211860657</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">2</property>
-                            <property name="width">1</property>
-                            <property name="height">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="todolist_add_button">
-                            <property name="label">gtk-apply</property>
-                            <property name="use_action_appearance">False</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="use_action_appearance">False</property>
-                            <property name="use_stock">True</property>
-                            <signal name="clicked" handler="on_todolist_add_button_clicked" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">3</property>
-                            <property name="width">2</property>
-                            <property name="height">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="todolist_delete_button">
-                            <property name="label">gtk-remove</property>
-                            <property name="use_action_appearance">False</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="use_action_appearance">False</property>
-                            <property name="use_stock">True</property>
-                            <property name="xalign">0.4699999988079071</property>
-                            <signal name="clicked" handler="on_todolist_delete_button_clicked" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">4</property>
-                            <property name="width">2</property>
-                            <property name="height">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkComboBoxText" id="todolist_category_comboboxtext">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="entry_text_column">0</property>
-                            <property name="id_column">0</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">1</property>
-                            <property name="width">1</property>
-                            <property name="height">1</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCalendar" id="todolist_calendar">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="valign">start</property>
-                        <property name="year">2012</property>
-                        <property name="month">11</property>
-                        <property name="day">7</property>
-                        <signal name="day-selected" handler="on_todolist_calendar_day_selected" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkScrolledWindow" id="scrolledwindow3">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="margin_top">5</property>
-                    <property name="margin_bottom">5</property>
-                    <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
-                    <property name="shadow_type">in</property>
-                    <child>
-                      <object class="GtkTreeView" id="todolist_treeview">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="hexpand">True</property>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection" id="todolist_treeview_selection">
-                            <signal name="changed" handler="on_todolist_treeview_selection_changed" swapped="no"/>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child type="tab">
-              <object class="GtkLabel" id="tab_todolist_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
-                <property name="margin_top">5</property>
-                <property name="margin_bottom">5</property>
-                <property name="label" translatable="yes">Todo List</property>
-              </object>
-              <packing>
-                <property name="position">1</property>
-                <property name="tab_fill">False</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkBox" id="box4">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -554,89 +336,15 @@ SOFTWARE.</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="category_tarif_label">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Tarif</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkEntry" id="category_name_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">●</property>
-                        <property name="invisible_char_set">True</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="top_attach">0</property>
                         <property name="width">1</property>
-                        <property name="height">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="category_unit_label">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Jednotka</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">2</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEntry" id="category_tarif_entry">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="margin_left">1</property>
-                        <property name="invisible_char">●</property>
-                        <property name="invisible_char_set">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">1</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEntry" id="category_unit_entry">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="invisible_char_set">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">2</property>
-                        <property name="width">1</property>
-                        <property name="height">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="category_add_button">
-                        <property name="label">gtk-add</property>
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="use_action_appearance">False</property>
-                        <property name="use_stock">True</property>
-                        <signal name="clicked" handler="on_category_add_button_clicked" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">3</property>
-                        <property name="width">2</property>
                         <property name="height">1</property>
                       </packing>
                     </child>
@@ -647,13 +355,12 @@ SOFTWARE.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_action_appearance">False</property>
                         <property name="use_stock">True</property>
                         <signal name="clicked" handler="on_category_edit_button_clicked" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
-                        <property name="top_attach">4</property>
+                        <property name="top_attach">2</property>
                         <property name="width">2</property>
                         <property name="height">1</property>
                       </packing>
@@ -665,13 +372,30 @@ SOFTWARE.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_action_appearance">False</property>
                         <property name="use_stock">True</property>
                         <signal name="clicked" handler="on_category_delete_button_clicked" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
-                        <property name="top_attach">5</property>
+                        <property name="top_attach">3</property>
+                        <property name="width">2</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="category_add_button">
+                        <property name="label">gtk-add</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="relief">half</property>
+                        <property name="use_stock">True</property>
+                        <signal name="clicked" handler="on_category_add_button_clicked" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
                         <property name="width">2</property>
                         <property name="height">1</property>
                       </packing>
@@ -740,7 +464,7 @@ SOFTWARE.</property>
                 </child>
               </object>
               <packing>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child type="tab">
@@ -754,7 +478,7 @@ SOFTWARE.</property>
                 <property name="label" translatable="yes">Kategorie</property>
               </object>
               <packing>
-                <property name="position">2</property>
+                <property name="position">1</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
@@ -795,7 +519,6 @@ SOFTWARE.</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">Režim běhu aplikace, při němž jsou sledovány aktivite uživatele dle nastavených kategorií a je tvořena statistika.</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -813,7 +536,6 @@ SOFTWARE.</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">Režim běhu aplikace, při kterém nejsou sbírány statistiky používání, ale uživatel je požádán při prvním použítí aktivity o její zařazení do kategorií.</property>
-                                <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="draw_indicator">True</property>
                                 <property name="group">radio_mode_tracking</property>
@@ -917,7 +639,6 @@ SOFTWARE.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="use_action_appearance">False</property>
                             <signal name="clicked" handler="on_gtk_about_clicked" swapped="no"/>
                           </object>
                           <packing>
@@ -968,7 +689,6 @@ SOFTWARE.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                             <signal name="clicked" handler="on_settings_delete_button_clicked" swapped="no"/>
                           </object>
                           <packing>
@@ -997,7 +717,7 @@ SOFTWARE.</property>
                 </child>
               </object>
               <packing>
-                <property name="position">3</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child type="tab">
@@ -1014,15 +734,21 @@ SOFTWARE.</property>
                 </attributes>
               </object>
               <packing>
-                <property name="position">3</property>
+                <property name="position">2</property>
                 <property name="tab_fill">False</property>
               </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child type="tab">
+              <placeholder/>
             </child>
           </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
@@ -1037,7 +763,6 @@ SOFTWARE.</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="has_tooltip">True</property>
-                <property name="use_action_appearance">False</property>
                 <property name="relief">none</property>
                 <property name="uri">https://github.com/martinsimon/ITU</property>
               </object>
@@ -1066,7 +791,6 @@ SOFTWARE.</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="use_action_appearance">False</property>
                 <signal name="toggled" handler="on_state_toggled" swapped="no"/>
               </object>
               <packing>
@@ -1081,20 +805,10 @@ SOFTWARE.</property>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="padding">5</property>
-            <property name="position">2</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkTextBuffer" id="modeTextBufferLearn">
-    <property name="text" translatable="yes">Aplikace je v režimu, při němž nejsou tvořeny statistiky a jsou pouze zaznamenávány aktivity, které uživatel udělal. Pokud je zjištěna doposud neprovedená aktivita a uživatel již má nastavenou alespoň jednu kategorii, je dotázán, jestli novou aktivitu nechce zařadit. Všechny aktivity jsou uloženy a uživatel je posléze muže zařadit do kategorií v záložce Kategorie.</property>
-  </object>
-  <object class="GtkTextBuffer" id="modeTextBufferTrack">
-    <property name="text" translatable="yes">Aplikace je v režimu, při němž jsou sledovány aktivity uživatele a dle nastavených kategorií je tvořena statistika. Neznámé aktivity jsou uloženy a uživatel je posléze může zařadit do kategorií v záložce Kategorie.</property>
-  </object>
-  <object class="GtkTextBuffer" id="waktuAboutTextBuffer">
-    <property name="text" translatable="yes">Verze: 0.0.1
-Datum 2014/01/31</property>
   </object>
 </interface>

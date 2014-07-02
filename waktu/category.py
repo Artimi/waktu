@@ -7,13 +7,12 @@ import os
 
 
 class Category(object):
-    """Category contains activities and tarification"""
+    """Category contains activities"""
 
-    def __init__(self, name="", activity=set(), tarif=None):
+    def __init__(self, name="", activity=set()):
         self.name = name
         self.activities = set()
         self.add_activity(activity)
-        self.tarif = tarif
 
     def add_activity(self, activity):
         if isinstance(activity, str):
@@ -33,34 +32,15 @@ class Category(object):
         else:
             return False
 
-    @property
-    def tarif(self):
-        try:
-            if len(self.tarif) == 0:
-                return None
-            else:
-                return self.tarif
-        except:
-            return None
-
-    @tarif.setter
-    def tarif(self, tarif):
-        try:
-            if len(tarif) == 2:
-                self.tarif = tarif
-        except:
-            pass
 
     def __str__(self):
         s = "Category: " + self.name + "\n"
         s += "Activities: " + str(self.activities) + "\n"
-        s += "Tarif: " + str(self.tarif)
         return s
 
     def get_content(self):
         return {'name': self.name,
-                'activities': list(self.activities),
-                'tarif': self.tarif}
+                'activities': list(self.activities)}
 
 
 class CategoryContainer(object):
@@ -91,7 +71,6 @@ class CategoryContainer(object):
 
     def editCategory(self, oldCategory, newCategory):
         oldCategory.name = newCategory.name
-        oldCategory.tarif = newCategory.tarif
         self.store()  # make the change persistent
 
     def findCategory(self, categoryName):
@@ -117,8 +96,7 @@ class CategoryContainer(object):
                 file_content = json.load(f)
             for category in file_content:
                 self.addCategory(Category(category['name'],
-                                          set(category['activities']),
-                                          category['tarif']))
+                                          set(category['activities'])))
 
     def store(self):
         """Store categories into file to make them persistent"""

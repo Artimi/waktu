@@ -20,7 +20,6 @@ class WaktuGui(Gtk.Window):
     def __init__(self):
         self.waktu = Waktu()
         self.waktu.restoreCategories()
-        self.waktu.restoreTodolist()
         self.waktu.restoreStats()
         self.waktu.restoreConfiguration()
         self.waktu.restoreActivities()
@@ -42,7 +41,6 @@ class WaktuGui(Gtk.Window):
         # self.set_comboboxes()
         self.set_category_treeview()
         self.set_activity_treeview()
-        self.set_todolist_treeview()
         self.set_statistics_treeview()
 
         self.category_treeview.drag_dest_add_text_targets()
@@ -99,40 +97,6 @@ class WaktuGui(Gtk.Window):
 
         self.category_treeview.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, [], Gdk.DragAction.MOVE)
         self.category_treeview.connect("drag-data-get", self.on_drag_data_get)
-
-    def set_todolist_treeview(self):
-        self.todolist_treeview = self.builder.get_object('todolist_treeview')
-        self.update_todolist()
-        category_column = Gtk.TreeViewColumn("Kategorie", Gtk.CellRendererText(), text=0)
-        time_column = Gtk.TreeViewColumn("Čas", Gtk.CellRendererText(), text=1)
-        category_column.set_expand(True)
-        time_column.set_expand(True)
-        self.todolist_treeview.append_column(category_column)
-        self.todolist_treeview.append_column(time_column)
-
-    def update_todolist(self, date_td=date.today()):
-        todolist = self.waktu.todolist.findTodolist(date_td)
-        if todolist is not None:
-            plans = todolist.getPlans()
-        self.todolist_treestore = Gtk.ListStore(str, str)
-        if todolist is not None:
-            for key, value in plans.items():
-                self.todolist_treestore.append([key, str(value.strftime("%H:%M"))])
-        self.todolist_treeview.set_model(self.todolist_treestore)
-        #update calendar
-        self.todolist_calendar = self.builder.get_object('todolist_calendar')
-        self.todolist_calendar.clear_marks()
-        todolists = self.waktu.todolist.getTodolists()
-        for day in todolists.keys():
-            if day.month == date_td.month:
-                self.todolist_calendar.mark_day(int(day.day))
-        #todolist_category_combobox
-        self.builder.get_object('todolist_time_entry').set_text("")
-        categories = self.waktu.categories.categories
-        todolist_category_comboboxtext = self.builder.get_object('todolist_category_comboboxtext')
-        todolist_category_comboboxtext.get_model().clear()
-        for cat in categories:
-            todolist_category_comboboxtext.append_text(cat.name)
 
     def on_drag_data_received(self, widget, drag_context, x, y, data, info, time):
         drop_info = widget.get_dest_row_at_pos(x, y)
@@ -204,15 +168,11 @@ class WaktuGui(Gtk.Window):
 
     def update_statistics_treestrore(self):
         pie_summary = self.waktu.stats.get_pie_summary()
-        todolist = self.waktu.todolist.findTodolist(date.today())
         self.statistics_liststore = Gtk.ListStore(str, str, str)
         for index in range(len(pie_summary['categories'])):
             cat = pie_summary['categories'][index]
             time_str = str(timedelta(seconds=int(pie_summary['values'][index])))
             plan_str = ""
-            if todolist is not None:
-                if cat in todolist.getPlans():
-                    plan_str = str(todolist.getPlans()[cat])
             self.statistics_liststore.append([cat, time_str, plan_str])
         self.statistics_treeview.set_model(self.statistics_liststore)
 
@@ -338,12 +298,10 @@ class WaktuGui(Gtk.Window):
     def on_category_tab_activate(self, notebook=None, obj=None, order=None):
         if order == 0:  # tab Stats
             self.update_statistic()
-        elif order == 1:  # tab Todolist
-            self.update_todolist()
-        elif order == 2:  # tab Category
+        elif order == 1:  # tab Category
             self.update_activity_treestore()
             self.update_category_treestore()
-        elif order == 3:  # tab Settings
+        elif order == 2:  # tab Settings
             pass
 
     def on_settings_delete_button_clicked(self,  data=None):
@@ -367,52 +325,6 @@ class WaktuGui(Gtk.Window):
     def on_statistics_categoriesfilter_combobox_changed(self, combobox, data=None):
         pass
 
-#Todolist panel signals
-    def on_todolist_calendar_day_selected(self, calendar, data=None):
-        year, month, day = calendar.get_date()
-        month += 1  # workaround, get_date() returns -1 month
-        date_str = str(year) + "-" + str(month).zfill(2) + "-" + str(day).zfill(2)
-        self.builder.get_object('todolist_date_entry').set_text(date_str)
-        date_td = date(year, month, day)
-        self.update_todolist(date_td)
-
-    def on_todolist_add_button_clicked(self, button, data=None):
-        date_str = self.builder.get_object('todolist_date_entry').get_text()
-        cat_str = self.builder.get_object('todolist_category_comboboxtext').get_active_id()
-        time_str = self.builder.get_object('todolist_time_entry').get_text()
-        if date_str != "" and cat_str is not None and time_str != "":
-            date_td = datetime.strptime(date_str, "%Y-%m-%d").date()
-            time_td = datetime.strptime(time_str, "%H:%M").time()
-            todolist = self.waktu.todolist.findTodolist(date_td)
-            if todolist is not None:
-                todolist.addPlan({cat_str: time_td})
-            else:
-                self.waktu.todolist.addTodolist({date_td: {cat_str: time_td}})
-        else:
-            self.notify_strong("Musíte zadat všechny údaje!")
-        self.on_todolist_calendar_day_selected(self.builder.get_object('todolist_calendar'))
-
-    def on_todolist_delete_button_clicked(self, button, data=None):
-        date_str = self.builder.get_object('todolist_date_entry').get_text()
-        cat_str = self.builder.get_object('todolist_category_comboboxtext').get_active_id()
-        if date_str != "" and cat_str is not None:
-            date_td = datetime.strptime(date_str, "%Y-%m-%d").date()
-            todolist = self.waktu.todolist.findTodolist(date_td)
-            if todolist is not None:
-                if todolist.removePlan(cat_str) is False:
-                    self.notify_strong("Na " + str(date_td) + " není naplánována činnost " + cat_str + ".")
-            else:
-                self.notify_strong("Na " + str(date_td) + " není naplánována činnost " + cat_str + ".")
-        else:
-            self.notify_strong("Musíte zadat datum a kategorii!")
-        self.on_todolist_calendar_day_selected(self.builder.get_object('todolist_calendar'))
-
-    def on_todolist_treeview_selection_changed(self, selection):
-        model, treeiter = selection.get_selected()
-        if treeiter is not None:
-            self.builder.get_object('todolist_category_comboboxtext').set_active_id(model[treeiter][0])
-            self.builder.get_object('todolist_time_entry').set_text(model[treeiter][1])
-
 #Categories panel signals
     def on_category_add_button_clicked(self, button, data=None):
         c = category.Category()
@@ -420,12 +332,6 @@ class WaktuGui(Gtk.Window):
         if c.name == "":
             self.notify_strong("Nebyl vložen žádný název kategorie.")
             return None
-        tarif = self.builder.get_object('category_tarif_entry').get_text()
-        unit = self.builder.get_object('category_unit_entry').get_text()
-        if tarif != "" and unit != "":
-            c.tarif = (tarif, unit)
-        else:
-            c.tarif = ()
         self.waktu.categories.addCategory(c)
         self.update_category_treestore()
 
@@ -433,12 +339,6 @@ class WaktuGui(Gtk.Window):
         logging.debug("edit button clicked")
         c = category.Category()
         c.name = self.builder.get_object('category_name_entry').get_text()
-        tarif = self.builder.get_object('category_tarif_entry').get_text()
-        unit = self.builder.get_object('category_unit_entry').get_text()
-        if tarif != "" and unit != "":
-            c.tarif = (tarif, unit)
-        else:
-            c.tarif = ()
 
         """If there is no category selected, skip it"""
         if self.current_category is None:
@@ -465,12 +365,6 @@ class WaktuGui(Gtk.Window):
                     self.current_category = cat
             if self.current_category is not None:
                 self.builder.get_object('category_name_entry').set_text(self.current_category.name)
-                if self.current_category.tarif is not None:
-                    self.builder.get_object('category_tarif_entry').set_text(str(self.current_category.tarif[0]))
-                    self.builder.get_object('category_unit_entry').set_text(str(self.current_category.tarif[1]))
-                else:
-                    self.builder.get_object('category_tarif_entry').set_text("")
-                    self.builder.get_object('category_unit_entry').set_text("")
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG,

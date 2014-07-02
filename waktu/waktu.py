@@ -2,7 +2,6 @@
 #-*- coding: UTF-8 -*-
 
 from category import CategoryContainer
-from todolist import TodoListContainer
 from configuration import Configuration
 from activity import Activities
 from stats import Stats
@@ -16,7 +15,6 @@ class Waktu(object):
     def __init__(self):
         self.setConfigPaths()
         self.categories = CategoryContainer(self.configPath['categories'])
-        self.todolist = TodoListContainer(self.configPath['todolist'])
         self.stats = Stats(self.configPath['stats'])
         self.configuration = Configuration(self.configPath['configuration'])
         self.activities = Activities(self.configPath['activities'])
@@ -29,7 +27,6 @@ class Waktu(object):
             'categories': self.configDir + 'categories.json',
             'activities': self.configDir + 'activities.json',
             'configuration': self.configDir + 'configuration.json',
-            'todolist': self.configDir + 'todolist.tree',
             'stats': self.configDir + 'stats/'
         }
         if not os.path.isdir(self.configPath['stats']):
@@ -42,14 +39,6 @@ class Waktu(object):
     def storeCategories(self):
         """Store categories into file to make them persistent"""
         self.categories.store()
-
-    def restoreTodolist(self):
-        """Restore stored todolist"""
-        self.todolist.restoreTodolist()
-
-    def storeTodolist(self):
-        """Store todolist into file to make them persistent"""
-        self.todolist.storeTodolist()
 
     def restoreConfiguration(self):
         """Restore stored configuration"""
@@ -83,14 +72,11 @@ class Waktu(object):
             os.remove('.activities.json')
         if os.path.exists('.configuration.json'):
             os.remove('.configuration.json')
-        if os.path.exists('.todolist.tree'):
-            os.remove('.todolist.tree')
 
         for statFile in os.listdir('stats'):
             os.remove('stats/' + statFile)
 
         self.categories.clearCategories()
-        self.todolist.clearTodolist()
         self.stats.clearStats()
         self.restoreConfiguration()
         self.activities.clear()
