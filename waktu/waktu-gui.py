@@ -110,7 +110,7 @@ class WaktuGui(Gtk.Window):
 
             category_iter = model.get_iter(pathStr[0])
 
-            if not self.waktu.categories.findCategory(model[category_iter][0]).containsActivity(text[-1]):
+            if text[-1] not in self.waktu.categories.findCategory(model[category_iter][0]):
                 model.append(category_iter, [text[-1]])
                 self.waktu.categories.findCategory(model[category_iter][0]).add_activity(text[-1])
 

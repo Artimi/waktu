@@ -26,12 +26,11 @@ class Category(object):
         elif isinstance(activity, Iterable):
             self.activities.difference_update(activity)
 
-    def containsActivity(self, activity):
+    def __contains__(self, activity):
         if activity in self.activities:
             return True
         else:
             return False
-
 
     def __str__(self):
         s = "Category: " + self.name + "\n"
@@ -84,7 +83,7 @@ class CategoryContainer(object):
         is included"""
         result = []
         for category in self.categories:
-            if category.containsActivity(activity.name):
+            if activity.name in category:
                 result.append(category)
         return result
 
