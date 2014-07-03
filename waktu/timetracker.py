@@ -42,7 +42,7 @@ class TimeTracker(Thread):
         while not self.stopthread.isSet():
             sleep(1)
 
-            """Skip tracking if it's disabled"""
+            # Skip tracking if it's disabled
             if not self.track.isSet():
                 continue
 
@@ -50,7 +50,7 @@ class TimeTracker(Thread):
             GObject.idle_add(self.screen.force_update)
             active_window = self.screen.get_active_window()
 
-            """Skip if there is no active window"""
+            # Skip if there is no active window
             if active_window is None:
                 Gdk.threads_leave()
                 continue
@@ -58,19 +58,18 @@ class TimeTracker(Thread):
             appName = active_window.get_application().get_name()
             appPid = active_window.get_application().get_pid()
 
-            """If the learning mode is activive, only append an activity"""
+            # If the learning mode is activive, only append an activity
             if self.mode.isSet():
                 self.activities.add(appName)
                 Gdk.threads_leave()
                 continue
 
             if self.lastActivity.activity.pid == appPid:
-                """Still the same activity, just actualize the end time"""
+                # Still the same activity, just actualize the end time
                 self.lastActivity.endTime = time()
 
             else:
-                """New activity, actualize the lastActivity and append
-                the new activity"""
+                # New activity, actualize the lastActivity and append the new activity
                 if self.lastActivity.activity.pid != 0:
                     tmp = copy.deepcopy(self.lastActivity)
                     self.stat.appendActivityRecord(tmp)
@@ -91,7 +90,7 @@ class TimeTracker(Thread):
             self.stat.appendActivityRecord(tmp)
             logging.debug("DBG: Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category))
 
-        """Store all records to file to make them persistent"""
+        # Store all records to file to make them persistent
         self.stat.store()
         self.activities.store()
 
@@ -106,14 +105,13 @@ class TimeTracker(Thread):
 
         activityCategories = self.categories.getContainingCategories(activity)
         if len(activityCategories) == 0:
-            """The activity isn't in any category"""
+            # The activity isn't in any category
             self.lastActivity.category = 'OTHER'
         elif len(activityCategories) == 1:
-            """The activity is in exactly one category"""
+            # The activity is in exactly one category
             self.lastActivity.category = activityCategories[0].name
         else:
-            """The activity is in more than one category.
-            The Waktu needs to ask user."""
+            # The activity is in more than one category. The Waktu needs to ask user.
             lastOccurrence = self.stat.getLastOccurrence(activity.name)
             # 10 minutes is the default time to remember users choice
             if lastOccurrence is None or (time() - lastOccurrence.endTime) > 600:
@@ -147,8 +145,8 @@ class TimeTracker(Thread):
         n.close()
 
         if self.lastActivity.activity.name == data.name:
-            """The focused app is still the same"""
+            # The focused app is still the same
             self.lastActivity.category = action
         else:
-            """There is another activity, need to find it backwards"""
+            # There is another activity, need to find it backwards
             self.stat.getLastOccurrence(data.name).category = action

@@ -340,7 +340,7 @@ class WaktuGui(Gtk.Window):
         c = category.Category()
         c.name = self.builder.get_object('category_name_entry').get_text()
 
-        """If there is no category selected, skip it"""
+        # If there is no category selected, skip it
         if self.current_category is None:
             return
 
