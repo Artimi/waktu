@@ -40,8 +40,8 @@ class TestCategory(unittest.TestCase):
         os.remove(self.file_path)
 
     def test_store_restore(self):
-        self.categories.addCategory(self.category_list[0])
-        self.categories.clearCategories()
+        self.categories.add(self.category_list[0])
+        self.categories.clear()
         self.categories.restore()
         self.assertEqual(len(self.categories), 1)
 
@@ -59,9 +59,9 @@ class TestStats(unittest.TestCase):
         os.remove(self.file_path)
 
     def test_store_restore(self):
-        self.stats.appendActivityRecord(self.activity_records[0])
+        self.stats.append(self.activity_records[0])
         self.stats.store('19700101')
-        self.stats.appendActivityRecord(self.activity_records[1])
+        self.stats.append(self.activity_records[1])
         self.assertEqual(len(self.stats), 2)
         self.stats.restore('19700101')
         self.assertEqual(len(self.stats), 1)

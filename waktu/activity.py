@@ -15,9 +15,9 @@ class Activity(object):
 
 
 class Activities(object):
-    def __init__(self, activitiesFile):
+    def __init__(self, activities_file):
         self.activities = set()
-        self.activitiesFile = activitiesFile
+        self.activities_file = activities_file
 
     def __iter__(self):
         return iter(self.activities)
@@ -32,16 +32,16 @@ class Activities(object):
 
     def restore(self):
         """Restore stored activities"""
-        if os.path.exists(self.activitiesFile):
+        if os.path.exists(self.activities_file):
             self.clear()
-            with open(self.activitiesFile) as f:
+            with open(self.activities_file) as f:
                 file_content = json.load(f)
             for activity in file_content:
                 self.add(Activity(activity['name'], activity['pid']))
 
     def store(self):
         """Store activities into file to make them persistent"""
-        with open(self.activitiesFile, "w+") as f:
+        with open(self.activities_file, "w+") as f:
             json.dump(self.get_content(), f, indent=1)
 
     def clear(self):

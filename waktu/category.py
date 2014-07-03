@@ -45,40 +45,40 @@ class Category(object):
 class CategoryContainer(object):
     """Container of categories"""
 
-    def __init__(self, categoryFile):
+    def __init__(self, category_file):
         self.categories = set()
-        self.categoryFile = categoryFile
+        self.category_file = category_file
 
     def __len__(self):
         return len(self.categories)
 
-    def addCategory(self, category):
+    def add(self, category):
         if isinstance(category, Category):
             self.categories.add(category)
         elif isinstance(category, Iterable):
             self.categories.update(category)
         self.store()  # make the change persistent
 
-    def deleteCategory(self, category):
+    def delete(self, category):
         if isinstance(category, Category):
             self.categories.discard(category)
         elif isinstance(category, Iterable):
             self.categories.difference_update(category)
         elif isinstance(category, str):
-            self.categories.discard(self.findCategory(category))
+            self.categories.discard(self.find(category))
         self.store()  # make the change persistent
 
-    def editCategory(self, oldCategory, newCategory):
-        oldCategory.name = newCategory.name
+    def edit(self, old_category, new_category):
+        old_category.name = new_category.name
         self.store()  # make the change persistent
 
-    def findCategory(self, categoryName):
+    def find(self, category_name):
         for cat in self.categories:
-            if cat.name == categoryName:
+            if cat.name == category_name:
                 return cat
         return None
 
-    def getContainingCategories(self, activity):
+    def get_containing_categories(self, activity):
         """Return a list of categories where the given activity
         is included"""
         result = []
@@ -89,20 +89,19 @@ class CategoryContainer(object):
 
     def restore(self):
         """Restore stored categories"""
-        if os.path.exists(self.categoryFile):
-            self.clearCategories()
-            with open(self.categoryFile) as f:
+        if os.path.exists(self.category_file):
+            self.clear()
+            with open(self.category_file) as f:
                 file_content = json.load(f)
             for category in file_content:
-                self.addCategory(Category(category['name'],
-                                          set(category['activities'])))
+                self.add(Category(category['name'], set(category['activities'])))
 
     def store(self):
         """Store categories into file to make them persistent"""
-        with open(self.categoryFile, 'w+') as f:
+        with open(self.category_file, 'w+') as f:
             json.dump(self.get_content(), f, indent=1)
 
-    def clearCategories(self):
+    def clear(self):
         self.categories = set()
 
     def get_content(self):

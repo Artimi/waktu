@@ -13,58 +13,58 @@ class Waktu(object):
     """Main class of Waktu project"""
 
     def __init__(self):
-        self.setConfigPaths()
-        self.categories = CategoryContainer(self.configPath['categories'])
-        self.stats = Stats(self.configPath['stats'])
-        self.configuration = Configuration(self.configPath['configuration'])
-        self.activities = Activities(self.configPath['activities'])
+        self.set_config_paths()
+        self.categories = CategoryContainer(self.config_path['categories'])
+        self.stats = Stats(self.config_path['stats'])
+        self.configuration = Configuration(self.config_path['configuration'])
+        self.activities = Activities(self.config_path['activities'])
 
-    def setConfigPaths(self):
-        self.configDir = os.path.expanduser("~/.config/waktu/")
-        if not os.path.isdir(self.configDir):
-            os.mkdir(self.configDir)
-        self.configPath = {
-            'categories': self.configDir + 'categories.json',
-            'activities': self.configDir + 'activities.json',
-            'configuration': self.configDir + 'configuration.json',
-            'stats': self.configDir + 'stats/'
+    def set_config_paths(self):
+        self.config_dir = os.path.expanduser("~/.config/waktu/")
+        if not os.path.isdir(self.config_dir):
+            os.mkdir(self.config_dir)
+        self.config_path = {
+            'categories': self.config_dir + 'categories.json',
+            'activities': self.config_dir + 'activities.json',
+            'configuration': self.config_dir + 'configuration.json',
+            'stats': self.config_dir + 'stats/'
         }
-        if not os.path.isdir(self.configPath['stats']):
-            os.mkdir(self.configPath['stats'])
+        if not os.path.isdir(self.config_path['stats']):
+            os.mkdir(self.config_path['stats'])
 
-    def restoreCategories(self):
+    def restore_categories(self):
         """Restore stored categories"""
         self.categories.restore()
 
-    def storeCategories(self):
+    def store_categories(self):
         """Store categories into file to make them persistent"""
         self.categories.store()
 
-    def restoreConfiguration(self):
+    def restore_configuration(self):
         """Restore stored configuration"""
         self.configuration.restore()
 
-    def storeConfiguration(self):
+    def store_configuration(self):
         """Store configuration into file to make them persistent"""
         self.configuration.store()
 
-    def restoreStats(self, dat=time.strftime("%Y%m%d")):
+    def restore_stats(self, dat=time.strftime("%Y%m%d")):
         """Restore stored stats to the day if there are any"""
         self.stats.restore(dat)
 
-    def storeStats(self, dat=time.strftime("%Y%m%d")):
+    def store_stats(self, dat=time.strftime("%Y%m%d")):
         """Store stats into file to make them persistent"""
         self.stats.store(dat)
 
-    def restoreActivities(self):
+    def restore_activites(self):
         """Restore stored activities"""
         self.activities.restore()
 
-    def storeActivities(self):
+    def store_activities(self):
         """Store activities into file to make them persistent"""
         self.activities.store()
 
-    def clearAllData(self):
+    def clear_all(self):
         """Clear all user created data"""
         if os.path.exists('.categories.json'):
             os.remove('.categories.json')
@@ -76,7 +76,7 @@ class Waktu(object):
         for statFile in os.listdir('stats'):
             os.remove('stats/' + statFile)
 
-        self.categories.clearCategories()
-        self.stats.clearStats()
-        self.restoreConfiguration()
+        self.categories.clear()
+        self.stats.clear()
+        self.restore_configuration()
         self.activities.clear()

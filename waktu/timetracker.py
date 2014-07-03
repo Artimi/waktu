@@ -21,10 +21,9 @@ class TimeTracker(Thread):
         self.categories = categories
         self.activities = activities
         self.stat = stat
-        self.lastActivity = ActivityRecord()
+        self.last_activity = ActivityRecord()
         self.screen = Wnck.Screen.get_default()
         self.n = Notify.Notification()
-        self.tmpName = ''
 
         if configuration['state']:
             self.track.set()
@@ -55,39 +54,39 @@ class TimeTracker(Thread):
                 Gdk.threads_leave()
                 continue
 
-            appName = active_window.get_application().get_name()
-            appPid = active_window.get_application().get_pid()
+            app_name = active_window.get_application().get_name()
+            app_pid = active_window.get_application().get_pid()
 
             # If the learning mode is activive, only append an activity
             if self.mode.isSet():
-                self.activities.add(appName)
+                self.activities.add(app_name)
                 Gdk.threads_leave()
                 continue
 
-            if self.lastActivity.activity.pid == appPid:
+            if self.last_activity.activity.pid == app_pid:
                 # Still the same activity, just actualize the end time
-                self.lastActivity.endTime = time()
+                self.last_activity.end_time = time()
 
             else:
                 # New activity, actualize the lastActivity and append the new activity
-                if self.lastActivity.activity.pid != 0:
-                    tmp = copy.deepcopy(self.lastActivity)
-                    self.stat.appendActivityRecord(tmp)
+                if self.last_activity.activity.pid != 0:
+                    tmp = copy.deepcopy(self.last_activity)
+                    self.stat.append(tmp)
                     self.activities.add(tmp.activity.name)
                     logging.debug("DBG: Zmena aktivity! Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category))
 
-                self.lastActivity.activity.name = appName
-                self.lastActivity.activity.pid = appPid
-                self.lastActivity.category = 'OTHER'
-                self.getCorrectCategory()
-                self.lastActivity.startTime = time()
-                self.lastActivity.endTime = time()
+                self.last_activity.activity.name = app_name
+                self.last_activity.activity.pid = app_pid
+                self.last_activity.category = 'OTHER'
+                self.set_correct_category()
+                self.last_activity.start_time = time()
+                self.last_activity.end_time = time()
 
             Gdk.threads_leave()
 
         if self.track.isSet() and not self.mode.isSet():
-            tmp = copy.deepcopy(self.lastActivity)
-            self.stat.appendActivityRecord(tmp)
+            tmp = copy.deepcopy(self.last_activity)
+            self.stat.append(tmp)
             logging.debug("DBG: Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category))
 
         # Store all records to file to make them persistent
@@ -98,28 +97,28 @@ class TimeTracker(Thread):
         """Stop the tracking system, uses id stored in initialization"""
         self.stopthread.set()
 
-    def getCorrectCategory(self, activity=None):
+    def set_correct_category(self, activity=None):
         """Find out category where the activity belongs to"""
         if activity is None:
-            activity = self.lastActivity.activity
+            activity = self.last_activity.activity
 
-        activityCategories = self.categories.getContainingCategories(activity)
-        if len(activityCategories) == 0:
+        activity_categories = self.categories.get_containing_categories(activity)
+        if len(activity_categories) == 0:
             # The activity isn't in any category
-            self.lastActivity.category = 'OTHER'
-        elif len(activityCategories) == 1:
+            self.last_activity.category = 'OTHER'
+        elif len(activity_categories) == 1:
             # The activity is in exactly one category
-            self.lastActivity.category = activityCategories[0].name
+            self.last_activity.category = activity_categories[0].name
         else:
             # The activity is in more than one category. The Waktu needs to ask user.
-            lastOccurrence = self.stat.getLastOccurrence(activity.name)
+            last_occurrence = self.stat.get_last_occurrence(activity.name)
             # 10 minutes is the default time to remember users choice
-            if lastOccurrence is None or (time() - lastOccurrence.endTime) > 600:
-                self.askUser(activity, activityCategories)
+            if last_occurrence is None or (time() - last_occurrence.endTime) > 600:
+                self.ask_user(activity, activity_categories)
             else:
-                self.lastActivity.category = lastOccurrence.category
+                self.last_activity.category = last_occurrence.category
 
-    def askUser(self, activity, categories):
+    def ask_user(self, activity, categories):
         """Creates a notification and asks a user where the activity belongs to"""
         if not Notify.is_initted():
             Notify.init('Waktu')
@@ -127,26 +126,27 @@ class TimeTracker(Thread):
         self.n.clear_hints()
         self.n.clear_actions()
         self.n.set_property('summary', 'Kam patří aktivita %s?' % activity.name)
-        self.n.set_property('body', 'Zdá se, že tuto aktivitu máte zvolenou ve více kategoriích. Zvolte, prosím, níže jednu, do které spadá tato aktivita práve teď.')
+        self.n.set_property('body', 'Zdá se, že tuto aktivitu máte zvolenou ve více kategoriích. Zvolte, prosím, níže'
+                                    ' jednu, do které spadá tato aktivita práve teď.')
         self.n.set_property('icon_name', 'dialog-question')
         self.n.set_urgency(Notify.Urgency.NORMAL)
         self.n.set_timeout(Notify.EXPIRES_NEVER)
         self.n.set_hint("resident", GLib.Variant('b', True))
 
         for cat in categories:
-            self.n.add_action(cat.name, cat.name, self.getUserAnswer, activity, None)
+            self.n.add_action(cat.name, cat.name, self.get_user_answer, activity, None)
 
-        self.n.add_action("OTHER", "Jinam", self.getUserAnswer, activity, None)
+        self.n.add_action("OTHER", "Jinam", self.get_user_answer, activity, None)
 
         self.n.show()
 
-    def getUserAnswer(self, n, action, data):
+    def get_user_answer(self, n, action, data):
         """Process user answer and delegate result"""
         n.close()
 
-        if self.lastActivity.activity.name == data.name:
+        if self.last_activity.activity.name == data.name:
             # The focused app is still the same
-            self.lastActivity.category = action
+            self.last_activity.category = action
         else:
             # There is another activity, need to find it backwards
-            self.stat.getLastOccurrence(data.name).category = action
+            self.stat.get_last_occurrence(data.name).category = action

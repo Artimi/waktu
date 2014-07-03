@@ -10,7 +10,7 @@ from timetracker import TimeTracker
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 
-from datetime import timedelta, date, datetime
+from datetime import timedelta
 
 TIMERANGES = ['Den', 'Týden', 'Měsíc', 'Rok', 'Věčnost']
 (COLUMN_TEXT, COLUMN_PIXBUF) = range(2)
@@ -19,10 +19,10 @@ TIMERANGES = ['Den', 'Týden', 'Měsíc', 'Rok', 'Věčnost']
 class WaktuGui(Gtk.Window):
     def __init__(self):
         self.waktu = Waktu()
-        self.waktu.restoreCategories()
-        self.waktu.restoreStats()
-        self.waktu.restoreConfiguration()
-        self.waktu.restoreActivities()
+        self.waktu.restore_categories()
+        self.waktu.restore_stats()
+        self.waktu.restore_configuration()
+        self.waktu.restore_activites()
 
         self.trackingCore = TimeTracker(self.waktu.stats,
                                         self.waktu.categories,
@@ -37,7 +37,7 @@ class WaktuGui(Gtk.Window):
         self.window.set_icon_from_file('icon.png')
         self.aboutdialog = None
         self.deleteDialog = None
-        self.lastMovedActivityTime = 0
+        self.last_moved_activity_time = 0
         # self.set_comboboxes()
         self.set_category_treeview()
         self.set_activity_treeview()
@@ -45,8 +45,8 @@ class WaktuGui(Gtk.Window):
 
         self.category_treeview.drag_dest_add_text_targets()
         self.category_treeview.drag_source_add_text_targets()
-        self.activityTreeview.drag_dest_add_text_targets()
-        self.activityTreeview.drag_source_add_text_targets()
+        self.activity_treeview.drag_dest_add_text_targets()
+        self.activity_treeview.drag_source_add_text_targets()
 
         self.set_settings_tab()
         self.set_statistic_graph()
@@ -106,19 +106,19 @@ class WaktuGui(Gtk.Window):
             model = widget.get_model()
             path, position = drop_info
 
-            pathStr = path.to_string().split(":")
+            path_str = path.to_string().split(":")
 
-            category_iter = model.get_iter(pathStr[0])
+            category_iter = model.get_iter(path_str[0])
 
-            if text[-1] not in self.waktu.categories.findCategory(model[category_iter][0]):
+            if text[-1] not in self.waktu.categories.find(model[category_iter][0]):
                 model.append(category_iter, [text[-1]])
-                self.waktu.categories.findCategory(model[category_iter][0]).add_activity(text[-1])
+                self.waktu.categories.find(model[category_iter][0]).add_activity(text[-1])
 
             if len(text) == 2:
                 category_name_src = text[0]
-                self.waktu.categories.findCategory(category_name_src).delete_activity(text[-1])
+                self.waktu.categories.find(category_name_src).delete_activity(text[-1])
 
-            self.waktu.storeCategories()
+            self.waktu.store_categories()
 
     def on_drag_data_received_remove(self, widget, drag_context, x, y, data, info, time):
         drop_info = widget.get_dest_row_at_pos(x, y)
@@ -127,28 +127,28 @@ class WaktuGui(Gtk.Window):
             path, position = drop_info
             cat, text = data.get_text().split(":")
 
-            self.waktu.categories.findCategory(cat).delete_activity(text)
-            self.waktu.storeCategories()
+            self.waktu.categories.find(cat).delete_activity(text)
+            self.waktu.store_categories()
 
     def set_activity_treeview(self):
-        self.activityTreeview = self.builder.get_object('activity_treeview')
+        self.activity_treeview = self.builder.get_object('activity_treeview')
         self.update_activity_treestore()
         cell = Gtk.CellRendererText()
         column = Gtk.TreeViewColumn("Aktivity", cell, text=0)
-        self.activityTreeview.append_column(column)
-        self.activityTreeview.expand_all()
+        self.activity_treeview.append_column(column)
+        self.activity_treeview.expand_all()
 
-        self.activityTreeview.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, [], Gdk.DragAction.COPY)
-        self.activityTreeview.connect("drag-data-get", self.on_drag_data_get)
+        self.activity_treeview.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, [], Gdk.DragAction.COPY)
+        self.activity_treeview.connect("drag-data-get", self.on_drag_data_get)
 
-        self.activityTreeview.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.MOVE)
-        self.activityTreeview.connect("drag-data-received", self.on_drag_data_received_remove)
+        self.activity_treeview.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.MOVE)
+        self.activity_treeview.connect("drag-data-received", self.on_drag_data_received_remove)
 
     def on_drag_data_get(self, widget, drag_context, data, info, time):
-        if self.lastMovedActivityTime == time:
+        if self.last_moved_activity_time == time:
             return
 
-        self.lastMovedActivityTime = time
+        self.last_moved_activity_time = time
 
         selected_model, selected_iter = widget.get_selection().get_selected()
         selected_path = widget.get_model().get_path(selected_iter)
@@ -156,12 +156,12 @@ class WaktuGui(Gtk.Window):
         text = widget.get_model().get_value(selected_iter, 0)
 
         if widget == self.category_treeview:
-            pathStr = selected_path.to_string().split(":")
+            path_str = selected_path.to_string().split(":")
 
-            if len(pathStr) == 1:
+            if len(path_str) == 1:
                 return
 
-            category_iter = selected_model.get_iter(pathStr[0])
+            category_iter = selected_model.get_iter(path_str[0])
             text = selected_model[category_iter][0] + ':' + text
 
         data.set_text(text, -1)
@@ -188,11 +188,11 @@ class WaktuGui(Gtk.Window):
 
     def update_activity_treestore(self):
         self.activities = self.waktu.activities
-        activityListstore = Gtk.ListStore(str)
+        activity_liststore = Gtk.ListStore(str)
         for activity in self.activities:
-            activityListstore.append([activity])
-        self.activityTreeview.set_model(activityListstore)
-        self.activityTreeview.expand_all()
+            activity_liststore.append([activity])
+        self.activity_treeview.set_model(activity_liststore)
+        self.activity_treeview.expand_all()
 
     def notify_strong(self, notification):
         dialog = Gtk.MessageDialog(self,
@@ -228,13 +228,13 @@ class WaktuGui(Gtk.Window):
         mode = self.waktu.configuration["mode"]
         state = self.waktu.configuration["state"]
 
-        modeText = self.builder.get_object('modeTextView')
+        mode_text = self.builder.get_object('modeTextView')
         if mode == 0:
             self.builder.get_object('radio_mode_tracking').set_active(True)
-            modeText.set_buffer(self.builder.get_object('modeTextBufferTrack'))
+            mode_text.set_buffer(self.builder.get_object('modeTextBufferTrack'))
         else:
             self.builder.get_object('radio_mode_learning').set_active(True)
-            modeText.set_buffer(self.builder.get_object('modeTextBufferLearn'))
+            mode_text.set_buffer(self.builder.get_object('modeTextBufferLearn'))
 
         state_toggle = self.builder.get_object('state_toggle')
         if state == 0:
@@ -263,12 +263,12 @@ class WaktuGui(Gtk.Window):
         if not button.get_active():
             return
 
-        modeText = self.builder.get_object('modeTextView')
+        mode_text = self.builder.get_object('modeTextView')
         if mode == 0:
-            modeText.set_buffer(self.builder.get_object('modeTextBufferTrack'))
+            mode_text.set_buffer(self.builder.get_object('modeTextBufferTrack'))
             self.trackingCore.mode.clear()
         else:
-            modeText.set_buffer(self.builder.get_object('modeTextBufferLearn'))
+            mode_text.set_buffer(self.builder.get_object('modeTextBufferLearn'))
             self.trackingCore.mode.set()
 
         self.waktu.configuration['mode'] = mode
@@ -311,7 +311,7 @@ class WaktuGui(Gtk.Window):
         self.deleteDialog.hide()
 
     def on_delete_confirm(self, data=None):
-        self.waktu.clearAllData()
+        self.waktu.clear_all()
         self.update_statistic_graph()
         self.update_activity_treestore()
 
@@ -332,7 +332,7 @@ class WaktuGui(Gtk.Window):
         if c.name == "":
             self.notify_strong("Nebyl vložen žádný název kategorie.")
             return None
-        self.waktu.categories.addCategory(c)
+        self.waktu.categories.add(c)
         self.update_category_treestore()
 
     def on_category_edit_button_clicked(self, button, data=None):
@@ -344,12 +344,12 @@ class WaktuGui(Gtk.Window):
         if self.current_category is None:
             return
 
-        self.waktu.categories.editCategory(self.current_category, c)
+        self.waktu.categories.edit(self.current_category, c)
         self.update_category_treestore()
 
     def on_category_delete_button_clicked(self, button, data=None):
         name = self.builder.get_object('category_name_entry').get_text()
-        self.waktu.categories.deleteCategory(name)
+        self.waktu.categories.delete(name)
         self.update_category_treestore()
 
     def on_tree_selection_changed(self, selection):
