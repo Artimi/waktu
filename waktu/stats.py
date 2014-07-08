@@ -21,10 +21,10 @@ class Stats(object):
     def append(self, activity_record):
         self.activity_records.append(activity_record)
 
-    def get_last_occurrence(self, activity_name):
+    def get_last_occurrence(self, activity_key):
         """Return the last occurrence of an activityRecord by given name"""
         for ar in reversed(self.activity_records):
-            if ar.activity.name == activity_name:
+            if ar.activity.key == activity_key:
                 return ar
         return None
 

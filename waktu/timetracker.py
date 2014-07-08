@@ -5,7 +5,7 @@ This module (and objects inside) are designed to track application in
 background and report results back.
 """
 from gi.repository import Wnck, Gdk, GObject, Notify, GLib
-from activityrecord import ActivityRecord
+from activityrecord import ActivityRecord, Activity
 from threading import Thread, Event
 from time import sleep, time
 import copy
@@ -57,12 +57,12 @@ class TimeTracker(Thread):
                 Gdk.threads_leave()
                 continue
 
-            app_name = active_window.get_application().get_name()
+            app_title = active_window.get_application().get_name()
             app_pid = active_window.get_application().get_pid()
 
             # If the learning mode is activive, only append an activity
             if self.mode.isSet():
-                self.activities.add(app_name)
+                self.activities.add(Activity(app_title, app_pid))
                 Gdk.threads_leave()
                 continue
 
@@ -75,11 +75,10 @@ class TimeTracker(Thread):
                 if self.last_activity.activity.pid != 0:
                     tmp = copy.deepcopy(self.last_activity)
                     self.stat.append(tmp)
-                    self.activities.add(tmp.activity.name)
-                    logging.debug("DBG: Zmena aktivity! Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category))
+                    self.activities.add(tmp.activity)
+                    logging.debug("DBG: Zmena aktivity! Ulozena aktivita %s (%s)" % (tmp.activity.key, tmp.category))
 
-                self.last_activity.activity.name = app_name
-                self.last_activity.activity.pid = app_pid
+                self.last_activity.activity = Activity(title=app_title, pid=app_pid)
                 self.last_activity.category = 'OTHER'
                 self.set_correct_category()
                 self.last_activity.start_time = time()
@@ -90,7 +89,7 @@ class TimeTracker(Thread):
         if self.track.isSet() and not self.mode.isSet():
             tmp = copy.deepcopy(self.last_activity)
             self.stat.append(tmp)
-            logging.debug("DBG: Ulozena aktivita %s (%s)" % (tmp.activity.name, tmp.category))
+            logging.debug("DBG: Ulozena aktivita %s (%s)" % (tmp.activity.key, tmp.category))
 
         # Store all records to file to make them persistent
         self.stat.store()
@@ -114,7 +113,7 @@ class TimeTracker(Thread):
             self.last_activity.category = activity_categories[0].name
         else:
             # The activity is in more than one category. The Waktu needs to ask user.
-            last_occurrence = self.stat.get_last_occurrence(activity.name)
+            last_occurrence = self.stat.get_last_occurrence(activity.key)
             # 10 minutes is the default time to remember users choice
             if last_occurrence is None or (time() - last_occurrence.endTime) > 600:
                 self.ask_user(activity, activity_categories)
@@ -128,7 +127,7 @@ class TimeTracker(Thread):
 
         self.n.clear_hints()
         self.n.clear_actions()
-        self.n.set_property('summary', 'Kam patří aktivita %s?' % activity.name)
+        self.n.set_property('summary', 'Kam patří aktivita %s?' % activity.key)
         self.n.set_property('body', 'Zdá se, že tuto aktivitu máte zvolenou ve více kategoriích. Zvolte, prosím, níže'
                                     ' jednu, do které spadá tato aktivita práve teď.')
         self.n.set_property('icon_name', 'dialog-question')
