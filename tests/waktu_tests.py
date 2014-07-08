@@ -13,8 +13,8 @@ class TestActivities(unittest.TestCase):
         fd, self.file_path = tempfile.mkstemp()
         os.close(fd)
         self.activities = waktu.Activities(self.file_path)
-        self.activity_list = [waktu.Activity('a1', 1),
-                              waktu.Activity('a2', 2)]
+        self.activity_list = [waktu.Activity('a1'),
+                              waktu.Activity('a2')]
 
     def tearDown(self):
         os.remove(self.file_path)
@@ -52,8 +52,8 @@ class TestStats(unittest.TestCase):
         fd, self.file_path = tempfile.mkstemp()
         os.close(fd)
         self.stats = waktu.Stats(self.file_path)
-        self.activity_records = [waktu.ActivityRecord('cat1', waktu.Activity('a1', 1), 1, 2),
-                                 waktu.ActivityRecord('cat2', waktu.Activity('a2', 2), 2, 3)]
+        self.activity_records = [waktu.ActivityRecord('cat1', waktu.Activity('a1'), 1, 2),
+                                 waktu.ActivityRecord('cat2', waktu.Activity('a2'), 2, 3)]
 
     def tearDown(self):
         os.remove(self.file_path)
