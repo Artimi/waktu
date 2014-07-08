@@ -190,7 +190,8 @@ class WaktuGui(Gtk.Window):
         self.activities = self.waktu.activities
         activity_liststore = Gtk.ListStore(str)
         for activity in self.activities:
-            activity_liststore.append([activity])
+            activity_liststore.append([activity.key])
+            # TODO: for each activity show information as tooltip
         self.activity_treeview.set_model(activity_liststore)
         self.activity_treeview.expand_all()
 
