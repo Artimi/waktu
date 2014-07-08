@@ -8,12 +8,36 @@ import json
 
 
 class Activity(object):
-    def __init__(self, name='', pid=0):
-        self.name = name
+    """This class encapsulate information about individual Activity.
+    If pid is provided class will search for process information"""
+    def __init__(self, title='', pid=0, name='', cmdline='', exe=''):
+        self.title = title
         self.pid = pid
+        self.name = name
+        self.cmdline = cmdline
+        self.exe = exe
+        if self.pid != 0:
+            self.name = self._get_process_info('comm')
+            self.cmdline = self._get_process_info('cmdline')
+            self.exe = os.path.realpath('/proc/' + str(self.pid) + '/exe')
+
+    @property
+    def key(self):
+        """ID representing given Activity"""
+        return self.name + '-' + self.title
 
     def get_content(self):
-        return {'name': self.name, 'pid': self.pid}
+        """Serves for storage."""
+        return {'name': self.name,
+                'title': self.title,
+                'cmdline': self.cmdline,
+                'exe': self.cmdline}
+
+    def _get_process_info(self, info):
+        """Reads information of process like name of process and command line
+        arguments."""
+        with open('/proc/' + str(self.pid) + '/' + info) as f:
+            return f.read().replace('\x00', ' ').strip()
 
 
 class Activities(object):
@@ -39,7 +63,7 @@ class Activities(object):
             with open(self.activities_file) as f:
                 file_content = json.load(f)
             for activity in file_content:
-                self.add(Activity(activity['name'], activity['pid']))
+                self.add(Activity(activity['name']))
 
     def store(self):
         """Store activities into file to make them persistent"""
