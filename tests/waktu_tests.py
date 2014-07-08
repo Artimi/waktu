@@ -16,8 +16,8 @@ class TestActivities(unittest.TestCase):
         fd, self.file_path = tempfile.mkstemp()
         os.close(fd)
         self.activities = Activities(self.file_path)
-        self.activity_list = [Activity('a1', 1),
-                              Activity('a2', 2)]
+        self.activity_list = [Activity('a1', name='name1'),
+                              Activity('a2', name='name2')]
 
     def tearDown(self):
         os.remove(self.file_path)
@@ -29,6 +29,12 @@ class TestActivities(unittest.TestCase):
         self.assertEqual(len(self.activities), 2)
         self.activities.restore()
         self.assertEqual(len(self.activities), 1)
+
+    def test_iter(self):
+        self.activities.add(self.activity_list[0])
+        self.activities.add(self.activity_list[1])
+        for pair in zip(self.activities, self.activity_list):
+            self.assertEqual(pair[0], pair[1])
 
 
 class TestCategory(unittest.TestCase):

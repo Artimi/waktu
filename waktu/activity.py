@@ -41,20 +41,24 @@ class Activity(object):
 
 
 class Activities(object):
+    """This is container of Activity objects. Activity are stored in dict
+    with key compounded of name and title."""
     def __init__(self, activities_file):
-        self.activities = set()
+        self.activities = dict()
         self.activities_file = activities_file
 
     def __iter__(self):
-        return iter(self.activities)
+        """Iterate over values only"""
+        for value in self.activities.itervalues():
+            yield value
 
     def __len__(self):
         return len(self.activities)
 
     def add(self, activity):
-        """Add _activity to the set. Automatically skip
-        already added activities"""
-        self.activities.add(activity)
+        """Add Activity to the dictionary. Overwrite already added activity
+        with same key"""
+        self.activities[activity.key] = activity
 
     def restore(self):
         """Restore stored activities"""
@@ -63,7 +67,10 @@ class Activities(object):
             with open(self.activities_file) as f:
                 file_content = json.load(f)
             for activity in file_content:
-                self.add(Activity(activity['name']))
+                self.add(Activity(title=activity['title'],
+                                  name=activity['name'],
+                                  cmdline=activity['cmdline'],
+                                  exe=activity['exe']))
 
     def store(self):
         """Store activities into file to make them persistent"""
@@ -74,4 +81,5 @@ class Activities(object):
         self.activities.clear()
 
     def get_content(self):
-        return [activity.get_content() for activity in self.activities]
+        """Serves for storage."""
+        return [activity.get_content() for activity in self.activities.itervalues()]
