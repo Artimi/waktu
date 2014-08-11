@@ -17,6 +17,7 @@ Requires: libwnck3
 Requires: pygobject3-base
 Requires: libnotify
 Requires: python-matplotlib
+Requires: python >= 2.7
 
 
 %description
