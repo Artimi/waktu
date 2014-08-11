@@ -1,5 +1,6 @@
-#!/usr/bin/env python2.7
 #-*- coding: UTF-8 -*-
+"""
+"""
 
 from gi.repository import Wnck, Gdk, GObject, Notify, GLib
 from activityrecord import ActivityRecord

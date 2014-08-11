@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Waktu
+Name[en_GB]=Waktu
+Comment=Time tracking application that automatically watch application you have focus on
+Comment[en_GB]=Time tracking application that automatically watch application you have focus on
+Exec=waktu
+Terminal=false
+Type=Application
+Icon=waktu
+StartupNotify=true
+Categories=Application;

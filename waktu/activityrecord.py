@@ -1,5 +1,6 @@
-#!/usr/bin/env python2.7
 #-*- coding: UTF-8 -*-
+"""
+"""
 
 from activity import Activity
 from time import time

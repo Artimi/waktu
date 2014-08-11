@@ -1,6 +1,6 @@
-#!/usr/bin/env python2.7
 #-*- coding: UTF-8 -*-
-
+"""
+"""
 from collections import deque
 import json
 import os
