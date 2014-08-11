@@ -1,5 +1,7 @@
 #-*- coding: UTF-8 -*-
-
+"""
+Waktu module for configuration related object. Handles Waktu's configuration, its storing and restoring.
+"""
 import json
 import os
 

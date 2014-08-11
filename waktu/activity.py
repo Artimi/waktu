@@ -1,5 +1,6 @@
 #-*- coding: UTF-8 -*-
 """
+Waktu module of activity related objects. An Activity in Waktu context means an application which is tracked. 
 """
 import os
 import json

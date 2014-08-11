@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 #-*- coding: UTF-8 -*-
 """
+Waktu is time tracking application that automatically watch application you have focus on.
 """
 import os
 import logging

@@ -1,5 +1,6 @@
 #-*- coding: UTF-8 -*-
 """
+Waktu module of statistics related objects
 """
 from collections import deque
 import json
@@ -46,13 +47,13 @@ class Stats(object):
         pie_summary = dict()
         pie_summary['categories'] = []
         pie_summary['values'] = []
-        #for ar in self.activity_records:
-        #    if ar.category not in pie_summary['categories']:
-        #        pie_summary['categories'].append(unicode(ar.category, errors='ignore'))
-        #        pie_summary['values'].append(ar.end_time - ar.start_time)
-        #    else:
-        #        index = pie_summary['categories'].index(ar.category)
-        #        pie_summary['values'][index] += ar.end_time - ar.start_time
+        for ar in self.activity_records:
+            if ar.category not in pie_summary['categories']:
+                pie_summary['categories'].append(unicode(ar.category, errors='ignore'))
+                pie_summary['values'].append(ar.end_time - ar.start_time)
+            else:
+                index = pie_summary['categories'].index(ar.category)
+                pie_summary['values'][index] += ar.end_time - ar.start_time
         return pie_summary
 
     def clear(self):
