@@ -1,0 +1,9 @@
+include MANIFEST.in
+include Makefile
+include AUTHORS
+include LICENSE
+include README.md
+include waktu.spec
+recursive-include waktu *.py
+include scripts/waktu
+include data/waktu.ui data/waktu.desktop data/icons/*

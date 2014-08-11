@@ -1,11 +1,12 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python2
 #-*- coding: UTF-8 -*-
-
+"""
+"""
+import os
 import logging
 from gi.repository import Gtk, Gdk, GObject
-from waktu import Waktu
-import category
-from timetracker import TimeTracker
+from waktu.controller import Controller
+from waktu.timetracker import TimeTracker
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
@@ -16,9 +17,9 @@ TIMERANGES = ['Den', 'Týden', 'Měsíc', 'Rok', 'Věčnost']
 (COLUMN_TEXT, COLUMN_PIXBUF) = range(2)
 
 
-class WaktuGui(Gtk.Window):
+class MainWindow(Gtk.Window):
     def __init__(self):
-        self.waktu = Waktu()
+        self.waktu = Controller()
         self.waktu.restore_categories()
         self.waktu.restore_stats()
         self.waktu.restore_configuration()
@@ -29,16 +30,33 @@ class WaktuGui(Gtk.Window):
                                         self.waktu.activities,
                                         self.waktu.configuration)
 
-        self.gladefile = 'waktu.glade'
+        if os.path.exists('../data/waktu.ui'):
+            self.gladefile = '../data/waktu.ui'
+        else:
+            path = os.path.abspath(
+                os.path.join(__file__, os.path.pardir, os.path.pardir))
+            if path is '/': # in case the path is /bin/waktu
+                path = '/usr'
+            self.gladefile = path + '/share/waktu/ui/waktu.ui'
+
         self.builder = Gtk.Builder()
         self.builder.add_from_file(self.gladefile)
         self.builder.connect_signals(self)
         self.window = self.builder.get_object('mainwindow')
-        self.window.set_icon_from_file('icon.png')
+
+        if os.path.exists('../data/icons/waktu.png'):
+            self.window.set_icon_from_file('../data/icons/waktu.png')
+        else:
+            path = os.path.abspath(
+                os.path.join(__file__, os.path.pardir, os.path.pardir))
+            if path is '/':
+                path = '/usr'
+            self.window.set_icon_from_file(os.path.join(path,
+                'share/icons/hicolor/48x48/apps/waktu.png'))
+
         self.aboutdialog = None
         self.deleteDialog = None
         self.last_moved_activity_time = 0
-        # self.set_comboboxes()
         self.set_category_treeview()
         self.set_activity_treeview()
         self.set_statistics_treeview()
@@ -370,7 +388,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG,
                         format="%(levelname)s, %(asctime)s, %(message)s")
     GObject.threads_init()
-    main = WaktuGui()
+    main = MainWindow()
     Gdk.threads_init()
 
     main.run_core()
