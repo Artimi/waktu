@@ -60,7 +60,11 @@ class Stats(object):
         pie_summary['values'] = []
         for ar in self.activity_records:
             if ar.category not in pie_summary['categories']:
-                pie_summary['categories'].append(unicode(ar.category, errors='ignore'))
+                try:
+                    cat = unicode(ar.category, errors='ignore')
+                except TypeError:
+                    cat = ar.category
+                pie_summary['categories'].append(cat)
                 pie_summary['values'].append(ar.end_time - ar.start_time)
             else:
                 index = pie_summary['categories'].index(ar.category)
