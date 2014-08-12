@@ -1,6 +1,8 @@
 #-*- coding: UTF-8 -*-
 """
-Waktu module for category related object. A Category in context of Waktu is a class containing activities which can represent e.g. Work, School or any other meaningfull area.
+Waktu module for category related object. A Category in context of
+Waktu is a class containing activities which can represent e.g. Work,
+School or any other meaningfull area.
 """
 from collections import Iterable
 import json

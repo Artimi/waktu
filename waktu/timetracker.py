@@ -1,6 +1,8 @@
 #-*- coding: UTF-8 -*-
 """
-Waktu module of timetracker core. This is functional core of Waktu. This module (and objects inside) are designed to track application in background and report results back.
+Waktu module of timetracker core. This is functional core of Waktu.
+This module (and objects inside) are designed to track application in
+background and report results back.
 """
 from gi.repository import Wnck, Gdk, GObject, Notify, GLib
 from activityrecord import ActivityRecord

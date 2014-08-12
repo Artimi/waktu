@@ -1,6 +1,7 @@
 #-*- coding: UTF-8 -*-
 """
-Waktu main module containing a Controller. Controller is designed to be a heart of the whole application.
+Waktu main module containing a Controller. Controller is designed to be
+a heart of the whole application.
 """
 from category import CategoryContainer
 from configuration import Configuration

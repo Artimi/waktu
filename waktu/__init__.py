@@ -1,7 +1,4 @@
 # -*- coding: UTF-8 -*-
-"""
-"""
-
 __all__ = ['activity', 'activityrecord', 'category', 'configuration',
            'stats', 'timetracker', 'controller']
 __author__ = """Petr Sebek <petr.sebek1@gmail.com>,

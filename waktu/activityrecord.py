@@ -1,6 +1,9 @@
 #-*- coding: UTF-8 -*-
 """
-Waktu module for object related to activity records. An ActivityRecord in Waktu's context means an record of an activity, a category which the activity belongs to, a start time of the recorded interval and its end. It's used for statictics.
+Waktu module for object related to activity records. An ActivityRecord
+in Waktu's context means an record of an activity, a category which
+the activity belongs to, a start time of the recorded interval and its
+end. It's used for statictics.
 """
 
 from activity import Activity
