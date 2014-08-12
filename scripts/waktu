@@ -331,7 +331,6 @@ class MainWindow(Gtk.Window):
 
     def on_delete_confirm(self, data=None):
         self.waktu.clear_all()
-        self.update_statistic_graph()
         self.update_activity_treestore()
 
     def on_delete_discard(self, data=None):

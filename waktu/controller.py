@@ -68,15 +68,15 @@ class Controller(object):
 
     def clear_all(self):
         """Clear all user created data"""
-        if os.path.exists('.categories.json'):
-            os.remove('.categories.json')
-        if os.path.exists('.activities.json'):
-            os.remove('.activities.json')
-        if os.path.exists('.configuration.json'):
-            os.remove('.configuration.json')
+        if os.path.exists(self.config_dir + '.categories.json'):
+            os.remove(self.config_dir + '.categories.json')
+        if os.path.exists(self.config_dir + '.activities.json'):
+            os.remove(self.config_dir + '.activities.json')
+        if os.path.exists(self.config_dir + '.configuration.json'):
+            os.remove(self.config_dir + '.configuration.json')
 
-        for statFile in os.listdir('stats'):
-            os.remove('stats/' + statFile)
+        for statFile in os.listdir(self.config_dir + 'stats'):
+            os.remove(self.config_dir + 'stats/' + statFile)
 
         self.categories.clear()
         self.stats.clear()
