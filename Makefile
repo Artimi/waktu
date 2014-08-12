@@ -1,5 +1,10 @@
 # Waktu Makefile
 
+# set DESTDIR variable if not
+ifndef $(DESTDIR)
+  DESTDIR=/
+endif
+
 all:
 	python2 setup.py build
 
