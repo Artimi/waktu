@@ -6,6 +6,7 @@ from collections import deque
 import json
 import os
 import time
+from waktu.activityrecord import ActivityRecord
 
 
 class Stats(object):
@@ -31,8 +32,17 @@ class Stats(object):
         """Open data file with stats and update records"""
         filename = self.stats_dir + date + '.json'
         if os.path.exists(filename):
-            with open(filename) as f:
-                self.activity_records = deque(json.load(f))
+            with open(filename, 'r') as f:
+                file_content = f.read()
+            if not file_content:
+                return False
+            json_content = json.loads(file_content)
+            self.clear()
+            for rec in json_content:
+                self.append(
+                    ActivityRecord(
+                        category=rec['category'], activity=rec['activity'],
+                        start_time=rec['startTime'], end_time=rec['endTime']))
             return True
         else:
             return False
@@ -40,8 +50,9 @@ class Stats(object):
     def store(self, date=time.strftime("%Y%m%d")):
         """Store the activityRecords structure into file"""
         filename = self.stats_dir + date + '.json'
-        with open(filename, 'w+') as f:
-            json.dump(self.get_content(), f)
+        if len(self.get_content()) > 0:
+            with open(filename, 'w+') as f:
+                json.dump(self.get_content(), f)
 
     def get_pie_summary(self):
         pie_summary = dict()
