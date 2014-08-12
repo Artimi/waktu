@@ -22,14 +22,21 @@ class Activity(object):
     @property
     def key(self):
         """ID representing given Activity"""
-        return self.name + '-' + self.title
+        return self.name + ' - ' + self.title
 
     def get_content(self):
         """Serves for storage."""
         return {'name': self.name,
                 'title': self.title,
                 'cmdline': self.cmdline,
-                'exe': self.cmdline}
+                'exe': self.exe}
+
+    def __str__(self):
+        """Text info about activity"""
+        return "Name: {0}\nTitle: {1}\nCmldline: {2}\nExe: {3}".format(self.name,
+                                                                      self.title,
+                                                                      self.cmdline,
+                                                                      self.exe)
 
     def _get_process_info(self, info):
         """Reads information of process like name of process and command line
