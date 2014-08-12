@@ -1,6 +1,8 @@
-#!/usr/bin/env python2.7
 #-*- coding: UTF-8 -*-
-
+"""
+Waktu main module containing a Controller. Controller is designed to be
+a heart of the whole application.
+"""
 from category import CategoryContainer
 from configuration import Configuration
 from activity import Activities
@@ -9,7 +11,7 @@ import time
 import os
 
 
-class Waktu(object):
+class Controller(object):
     """Main class of Waktu project"""
 
     def __init__(self):

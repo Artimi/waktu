@@ -1,8 +1,11 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python2
 #-*- coding: UTF-8 -*-
 
 import unittest
-import waktu
+from waktu.activity import Activity, Activities
+from waktu.category import Category, CategoryContainer
+from waktu.activityrecord import ActivityRecord
+from waktu.stats import Stats
 import tempfile
 import os
 
@@ -12,9 +15,9 @@ class TestActivities(unittest.TestCase):
     def setUp(self):
         fd, self.file_path = tempfile.mkstemp()
         os.close(fd)
-        self.activities = waktu.Activities(self.file_path)
-        self.activity_list = [waktu.Activity('a1', 1),
-                              waktu.Activity('a2', 2)]
+        self.activities = Activities(self.file_path)
+        self.activity_list = [Activity('a1', 1),
+                              Activity('a2', 2)]
 
     def tearDown(self):
         os.remove(self.file_path)
@@ -33,8 +36,8 @@ class TestCategory(unittest.TestCase):
     def setUp(self):
         fd, self.file_path = tempfile.mkstemp()
         os.close(fd)
-        self.categories = waktu.CategoryContainer(self.file_path)
-        self.category_list = [waktu.Category('cat1', 'a1')]
+        self.categories = CategoryContainer(self.file_path)
+        self.category_list = [Category('cat1', 'a1')]
 
     def tearDown(self):
         os.remove(self.file_path)
@@ -51,9 +54,9 @@ class TestStats(unittest.TestCase):
     def setUp(self):
         fd, self.file_path = tempfile.mkstemp()
         os.close(fd)
-        self.stats = waktu.Stats(self.file_path)
-        self.activity_records = [waktu.ActivityRecord('cat1', waktu.Activity('a1', 1), 1, 2),
-                                 waktu.ActivityRecord('cat2', waktu.Activity('a2', 2), 2, 3)]
+        self.stats = Stats(self.file_path)
+        self.activity_records = [ActivityRecord('cat1', Activity('a1', 1), 1, 2),
+                                 ActivityRecord('cat2', Activity('a2', 2), 2, 3)]
 
     def tearDown(self):
         os.remove(self.file_path)

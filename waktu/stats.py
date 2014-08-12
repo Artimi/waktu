@@ -1,6 +1,7 @@
-#!/usr/bin/env python2.7
 #-*- coding: UTF-8 -*-
-
+"""
+Waktu module of statistics related objects
+"""
 from collections import deque
 import json
 import os

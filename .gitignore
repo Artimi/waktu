@@ -47,7 +47,3 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
-
-# Project dependent
-waktu/.categories.tree
-waktu/.configuration
