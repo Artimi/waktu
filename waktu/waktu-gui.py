@@ -197,7 +197,7 @@ class WaktuGui(Gtk.Window):
     def on_activity_row_activated(self, treeview, path, view_column):
         store = treeview.get_model()
         activity_key = store[path][0]
-        activity_info = str(self.activities.activities[activity_key])
+        activity_info = str(self.activities[activity_key])
         category_activity_info = self.builder.get_object('category_activity_info')
         category_activity_info.get_buffer().set_text(activity_info)
 

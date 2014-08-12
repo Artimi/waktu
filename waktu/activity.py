@@ -60,6 +60,9 @@ class Activities(object):
     def __len__(self):
         return len(self.activities)
 
+    def __getitem__(self, key):
+        return self.activities[key]
+
     def add(self, activity):
         """Add Activity to the dictionary. Overwrite already added activity
         with same key"""
