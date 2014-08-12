@@ -210,9 +210,15 @@ class MainWindow(Gtk.Window):
         activity_liststore = Gtk.ListStore(str)
         for activity in self.activities:
             activity_liststore.append([activity.key])
-            # TODO: for each activity show information as tooltip
         self.activity_treeview.set_model(activity_liststore)
         self.activity_treeview.expand_all()
+
+    def on_activity_row_activated(self, treeview, path, view_column):
+        store = treeview.get_model()
+        activity_key = store[path][0]
+        activity_info = str(self.activities.activities[activity_key])
+        category_activity_info = self.builder.get_object('category_activity_info')
+        category_activity_info.get_buffer().set_text(activity_info)
 
     def notify_strong(self, notification):
         dialog = Gtk.MessageDialog(self,
