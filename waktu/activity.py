@@ -75,8 +75,10 @@ class Activities(object):
         if os.path.exists(self.activities_file):
             self.clear()
             with open(self.activities_file) as f:
-                file_content = json.load(f)
-            for activity in file_content:
+                file_content = f.read()
+            json_content = json.loads(file_content)
+
+            for activity in json_content:
                 self.add(Activity(title=activity['title'],
                                   name=activity['name'],
                                   cmdline=activity['cmdline'],
@@ -84,8 +86,9 @@ class Activities(object):
 
     def store(self):
         """Store activities into file to make them persistent"""
-        with open(self.activities_file, "w+") as f:
-            json.dump(self.get_content(), f, indent=1)
+        if len(self.get_content()) > 0:
+            with open(self.activities_file, "w+") as f:
+                json.dump(self.get_content(), f, indent=1)
 
     def clear(self):
         self.activities.clear()
