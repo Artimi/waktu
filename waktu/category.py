@@ -65,10 +65,10 @@ class CategoryContainer(object):
     def delete(self, category):
         if isinstance(category, Category):
             self.categories.discard(category)
-        elif isinstance(category, Iterable):
-            self.categories.difference_update(category)
         elif isinstance(category, str):
             self.categories.discard(self.find(category))
+        elif isinstance(category, Iterable):
+            self.categories.difference_update(category)
         self.store()  # make the change persistent
 
     def edit(self, old_category, new_category):
