@@ -6,9 +6,29 @@ Waktu is time tracking application that automatically watch application you have
 import os
 import logging
 from gi.repository import Gtk, Gdk, GObject
-from waktu.controller import Controller
-from waktu.timetracker import TimeTracker
-from waktu.category import Category
+
+# try to import local files first
+try:
+    import sys
+    path = '../waktu'
+    sys.path.append(path)
+    module = __import__('controller')
+    reload(module)
+    from controller import Controller
+
+    module = __import__('timetracker')
+    reload(module)
+    from timetracker import TimeTracker
+
+    module = __import__('category')
+    reload(module)
+    from category import Category
+
+    del sys.path[-1]
+except ImportError:
+    from waktu.controller import Controller
+    from waktu.timetracker import TimeTracker
+    from waktu.category import Category
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
