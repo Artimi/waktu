@@ -473,6 +473,7 @@ Datum 2014/01/31</property>
                           <object class="GtkTreeView" id="activity_treeview">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="activate-on-single-click">True</property>
                             <signal name="row-activated" handler="on_activity_row_activated" swapped="no"/>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection" id="treeview-selection2"/>
