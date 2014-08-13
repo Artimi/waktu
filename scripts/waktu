@@ -8,6 +8,7 @@ import logging
 from gi.repository import Gtk, Gdk, GObject
 from waktu.controller import Controller
 from waktu.timetracker import TimeTracker
+from waktu.category import Category
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
@@ -345,7 +346,7 @@ class MainWindow(Gtk.Window):
 
 #Categories panel signals
     def on_category_add_button_clicked(self, button, data=None):
-        c = category.Category()
+        c = Category()
         c.name = self.builder.get_object('category_name_entry').get_text()
         if c.name == "":
             self.notify_strong("Nebyl vložen žádný název kategorie.")
@@ -355,7 +356,7 @@ class MainWindow(Gtk.Window):
 
     def on_category_edit_button_clicked(self, button, data=None):
         logging.debug("edit button clicked")
-        c = category.Category()
+        c = Category()
         c.name = self.builder.get_object('category_name_entry').get_text()
 
         # If there is no category selected, skip it
