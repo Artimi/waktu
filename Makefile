@@ -29,3 +29,6 @@ tarball:
 rpm: tarball
 	rpmbuild -tb dist/waktu-*.tar.gz
 	mv ~/rpmbuild/RPMS/noarch/* dist/
+
+run:
+	cd scripts ; python2 waktu ; cd ..
