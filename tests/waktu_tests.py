@@ -61,8 +61,8 @@ class TestStats(unittest.TestCase):
         fd, self.file_path = tempfile.mkstemp()
         os.close(fd)
         self.stats = Stats(self.file_path)
-        self.activity_records = [ActivityRecord('cat1', Activity('a1', 1), 1, 2),
-                                 ActivityRecord('cat2', Activity('a2', 2), 2, 3)]
+        self.activity_records = [ActivityRecord('cat1', Activity('a1', name='name1'), 1, 2),
+                                 ActivityRecord('cat2', Activity('a2', name='name2'), 2, 3)]
 
     def tearDown(self):
         os.remove(self.file_path)
